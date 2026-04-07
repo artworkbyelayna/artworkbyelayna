@@ -1,810 +1,178 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artwork by Elayna</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      background: #f3f3f3;
-      color: #1f1f1f;
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    body.menu-open {
-      overflow: hidden;
-    }
-
-    :root {
-      --sidebar-width: 78px;
-      --header-height: 72px;
-      --radius: 20px;
-      --shadow: 0 3px 12px rgba(0,0,0,0.08);
-      --shadow-hover: 0 10px 24px rgba(0,0,0,0.14);
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      height: var(--header-height);
-      background: rgba(243,243,243,0.96);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 16px;
-      padding: 12px 20px 12px 18px;
-      margin-left: var(--sidebar-width);
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      min-width: 0;
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      position: relative;
-      flex: 0 0 auto;
-    }
-
-    .brand-icon img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      transition: opacity 0.3s ease, transform 0.3s ease;
-    }
-
-    .brand-icon .teal {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .brand-icon .purple {
-      opacity: 0;
-      transform: scale(0.94);
-    }
-
-    .brand:hover .brand-icon .teal {
-      opacity: 0;
-      transform: scale(1.06);
-    }
-
-    .brand:hover .brand-icon .purple {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .brand-text {
-      min-width: 0;
-    }
-
-    .brand-title {
-      font-size: 1rem;
-      font-weight: 700;
-      letter-spacing: 0.01em;
-      line-height: 1.1;
-    }
-
-    .brand-subtitle {
-      font-size: 0.78rem;
-      color: #666;
-      margin-top: 4px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .top-actions {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex: 0 0 auto;
-    }
-
-    .icon-btn {
-      width: 44px;
-      height: 44px;
-      border-radius: 999px;
-      border: 1px solid rgba(0,0,0,0.1);
-      background: #fff;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-    }
-
-    .icon-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 16px rgba(0,0,0,0.10);
-      background: #fafafa;
-    }
-
-    .icon-btn svg {
-      width: 21px;
-      height: 21px;
-      stroke: #222;
-    }
-
-    .search-panel {
-      position: fixed;
-      top: 88px;
-      right: 20px;
-      width: min(360px, calc(100vw - 32px));
-      background: rgba(255,255,255,0.96);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 24px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.18);
-      padding: 18px;
-      z-index: 1200;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(-10px) scale(0.98);
-      transition: opacity 0.24s ease, transform 0.24s ease, visibility 0.24s ease;
-    }
-
-    .search-panel.open {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0) scale(1);
-    }
-
-    .search-panel h3 {
-      margin: 0 0 12px;
-      font-size: 1rem;
-    }
-
-    .search-input-wrap {
-      position: relative;
-      margin-bottom: 14px;
-    }
-
-    .search-input-wrap input {
-      width: 100%;
-      padding: 14px 14px 14px 44px;
-      border-radius: 16px;
-      border: 1px solid rgba(0,0,0,0.12);
-      font-size: 0.96rem;
-      outline: none;
-      background: #f7f7f7;
-    }
-
-    .search-input-wrap svg {
-      position: absolute;
-      left: 14px;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 18px;
-      height: 18px;
-      stroke: #666;
-    }
-
-    .search-links {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 10px;
-    }
-
-    .search-links a {
-      text-decoration: none;
-      color: #222;
-      background: #f5f5f5;
-      border: 1px solid rgba(0,0,0,0.08);
-      border-radius: 16px;
-      padding: 12px 14px;
-      font-size: 0.92rem;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-
-    .search-links a:hover {
-      background: #ececec;
-      transform: translateY(-1px);
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: var(--sidebar-width);
-      height: 100vh;
-      background: rgba(243,243,243,0.98);
-      border-right: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 14px 10px;
-      z-index: 1100;
-      gap: 12px;
-    }
-
-    .menu-badge {
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      background: #fff;
-      border: 1px solid rgba(0,0,0,0.08);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-      margin-bottom: 4px;
-    }
-
-    .menu-badge svg {
-      width: 20px;
-      height: 20px;
-      stroke: #333;
-    }
-
-    .nav-icons {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
-      width: 100%;
-      align-items: center;
-    }
-
-    .nav-link {
-      position: relative;
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: transparent;
-      text-decoration: none;
-      transition: background 0.2s ease, transform 0.2s ease;
-    }
-
-    .nav-link:hover {
-      background: rgba(255,255,255,0.9);
-      transform: translateY(-1px);
-    }
-
-    .nav-link img {
-      width: 26px;
-      height: 26px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .nav-link .tooltip {
-      position: absolute;
-      left: 58px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: rgba(30,30,30,0.96);
-      color: #fff;
-      padding: 8px 11px;
-      border-radius: 12px;
-      font-size: 0.82rem;
-      white-space: nowrap;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      transform-origin: left center;
-    }
-
-    .nav-link:hover .tooltip {
-      opacity: 1;
-      transform: translate(4px, -50%);
-    }
-
-    .main {
-      margin-left: var(--sidebar-width);
-      padding: 18px 18px 40px;
-    }
-
-    .masonry {
-      column-count: 5;
-      column-gap: 16px;
-      max-width: 1600px;
-      margin: 0 auto;
-    }
-
-    .card {
-      break-inside: avoid;
-      margin: 0 0 16px;
-      display: inline-block;
-      width: 100%;
-      border-radius: var(--radius);
-      overflow: hidden;
-      background: #fff;
-      box-shadow: var(--shadow);
-      transition: transform 0.24s ease, box-shadow 0.24s ease;
-      cursor: pointer;
-      position: relative;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
-    }
-
-    .card img {
-      width: 100%;
-      display: block;
-      height: auto;
-      background: #e9e9e9;
-    }
-
-    .card .caption {
-      padding: 10px 12px 12px;
-      font-size: 0.84rem;
-      color: #555;
-      line-height: 1.35;
-      background: #fff;
-      word-break: break-word;
-    }
-
-    .load-indicator {
-      max-width: 1600px;
-      margin: 18px auto 0;
-      text-align: center;
-      color: #777;
-      font-size: 0.95rem;
-      padding: 18px 0;
-    }
-
-    .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 24px;
-      z-index: 2000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.24s ease;
-    }
-
-    .modal.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .modal-inner {
-      max-width: min(92vw, 1100px);
-      max-height: 90vh;
-      background: #fff;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.28);
-      transform: scale(0.96);
-      transition: transform 0.24s ease;
-    }
-
-    .modal.open .modal-inner {
-      transform: scale(1);
-    }
-
-    .modal-image-wrap {
-      background: #f0f0f0;
-      max-height: 78vh;
-      overflow: auto;
-    }
-
-    .modal-image-wrap img {
-      width: 100%;
-      display: block;
-      height: auto;
-    }
-
-    .modal-meta {
-      padding: 16px 18px 18px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-    }
-
-    .modal-title {
-      font-size: 0.95rem;
-      color: #333;
-      word-break: break-word;
-    }
-
-    .modal-actions {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .modal-actions a,
-    .modal-actions button {
-      border: none;
-      text-decoration: none;
-      background: #111;
-      color: #fff;
-      padding: 11px 14px;
-      border-radius: 14px;
-      cursor: pointer;
-      font-size: 0.9rem;
-    }
-
-    .modal-actions a.secondary,
-    .modal-actions button.secondary {
-      background: #ececec;
-      color: #222;
-    }
-
-    @media (max-width: 1400px) {
-      .masonry { column-count: 4; }
-    }
-
-    @media (max-width: 1080px) {
-      .masonry { column-count: 3; }
-    }
-
-    @media (max-width: 760px) {
-      :root {
-        --sidebar-width: 64px;
-        --header-height: 66px;
-      }
-
-      .topbar {
-        padding-right: 14px;
-        padding-left: 14px;
-      }
-
-      .brand-subtitle {
-        display: none;
-      }
-
-      .masonry {
-        column-count: 2;
-        column-gap: 12px;
-      }
-
-      .main {
-        padding: 14px 12px 28px;
-      }
-
-      .card {
-        margin-bottom: 12px;
-      }
-    }
-
-    @media (max-width: 520px) {
-      .masonry { column-count: 1; }
-      .search-links { grid-template-columns: 1fr; }
-
-      .nav-link .tooltip {
-        display: none;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zwilight Mosaic</title>
+
+<style>
+:root {
+  --brand-teal: #00f0d0;
+  --bg: #0a0a0a;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  font-family: Arial, sans-serif;
+  color: white;
+  display: flex;
+}
+
+/* LEFT MENU */
+.sidebar {
+  width: 80px;
+  background: #111;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 10px 0;
+  gap: 15px;
+}
+
+.icon {
+  cursor: pointer;
+}
+
+.icon svg {
+  width: 28px;
+  height: 28px;
+  stroke: white;
+  transition: all 0.2s ease;
+}
+
+.icon:hover svg {
+  stroke: var(--brand-teal);
+  filter: drop-shadow(0 0 6px var(--brand-teal));
+}
+
+/* MAIN CONTENT */
+.main {
+  flex: 1;
+  padding: 10px;
+}
+
+/* TOP LOGO */
+.top-logo {
+  width: 120px;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 8px var(--brand-teal));
+}
+
+/* MOSAIC */
+#mosaic {
+  column-count: 3;
+  column-gap: 10px;
+}
+
+.mosaic-item {
+  width: 100%;
+  margin-bottom: 10px;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  transition: all 0.25s ease;
+}
+
+.mosaic-item:hover {
+  border: 2px solid var(--brand-teal);
+  box-shadow: 0 0 10px var(--brand-teal);
+  transform: scale(1.02);
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+  #mosaic {
+    column-count: 2;
+  }
+}
+</style>
 </head>
+
 <body>
 
-  <aside class="sidebar">
-    <div class="menu-badge" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round"/>
-      </svg>
-    </div>
-
-    <nav class="nav-icons">
-      <a class="nav-link" href="#" data-name="Butterfly">
-        <img src="svg/butterfly.svg" alt="Butterfly">
-        <span class="tooltip">Butterfly</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Fairy">
-        <img src="svg/fairy.svg" alt="Fairy">
-        <span class="tooltip">Fairy</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Friends">
-        <img src="svg/friends.svg" alt="Friends">
-        <span class="tooltip">Friends</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Info">
-        <img src="svg/info.svg" alt="Info">
-        <span class="tooltip">Info</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Mushroom">
-        <img src="svg/mushroom.svg" alt="Mushroom">
-        <span class="tooltip">Mushroom</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Product">
-        <img src="svg/product.svg" alt="Product">
-        <span class="tooltip">Product</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Share">
-        <img src="svg/share.svg" alt="Share">
-        <span class="tooltip">Share</span>
-      </a>
-      <a class="nav-link" href="#" data-name="Shop">
-        <img src="svg/shop.svg" alt="Shop">
-        <span class="tooltip">Shop</span>
-      </a>
-    </nav>
-  </aside>
-
-  <header class="topbar">
-    <div class="brand">
-      <div class="brand-icon">
-        <img class="teal" src="img/E_teal.png" alt="Artwork by Elayna logo teal">
-        <img class="purple" src="img/E_purple.png" alt="Artwork by Elayna logo purple">
-      </div>
-      <div class="brand-text">
-        <div class="brand-title">Artwork by Elayna</div>
-        <div class="brand-subtitle">Mosaic collection • resin • fantasy • jewelry • visual art</div>
-      </div>
-    </div>
-
-    <div class="top-actions">
-      <button class="icon-btn" id="searchToggle" aria-label="Open search menu" aria-expanded="false">
-        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-          <circle cx="11" cy="11" r="7" stroke="currentColor"></circle>
-          <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round"></path>
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <div class="search-panel" id="searchPanel">
-    <h3>Explore</h3>
-
-    <div class="search-input-wrap">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <circle cx="11" cy="11" r="7" stroke="currentColor"></circle>
-        <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round"></path>
-      </svg>
-      <input type="text" id="searchInput" placeholder="Search images by filename..." />
-    </div>
-
-    <div class="search-links">
-      <a href="#">Newest Pieces</a>
-      <a href="#">Butterfly Works</a>
-      <a href="#">Mushroom Pieces</a>
-      <a href="#">Resin Jewelry</a>
-      <a href="#">Drawings</a>
-      <a href="#">Shop Collection</a>
-    </div>
+<div class="sidebar">
+  <div class="icon" onclick="filterByKeyword('purple')">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+      <path d="M12 4v16M4 12h16"/>
+    </svg>
   </div>
 
-  <main class="main">
-    <section class="masonry" id="gallery"></section>
-    <div class="load-indicator" id="loadIndicator">Loading more images…</div>
-  </main>
-
-  <div class="modal" id="imageModal" aria-hidden="true">
-    <div class="modal-inner">
-      <div class="modal-image-wrap">
-        <img id="modalImg" src="" alt="">
-      </div>
-      <div class="modal-meta">
-        <div class="modal-title" id="modalTitle"></div>
-        <div class="modal-actions">
-          <a id="modalOpenFile" href="#" target="_blank" rel="noopener noreferrer">Open Image</a>
-          <button class="secondary" id="modalClose">Close</button>
-        </div>
-      </div>
-    </div>
+  <div class="icon" onclick="renderMosaic(allImages)">
+    <svg fill="none" viewBox="0 0 24 24" stroke-width="1.5">
+      <circle cx="12" cy="12" r="8"/>
+    </svg>
   </div>
+</div>
 
-  <script>
-    const imageFiles = [
-      "ChatGPT Image Mar 29, 2026, 04_07_13 PM.png",
-      "E_purple.png",
-      "E_teal.png",
-      "Resized_20260329_181222_1774836313602.jpeg",
-      "assortedresinpendents.JPG",
-      "better.JPG",
-      "blahblah.png",
-      "bluepink_bluepinkeardrop.JPG",
-      "blueresinmushrooms.JPG",
-      "bottle.jpeg",
-      "claybutterfly_keychain_silverpink.JPG",
-      "claybutterflykeychain_resinfinish_pink.JPG",
-      "claybutterflypendant_resinfinish_pink.JPG",
-      "claybutterflypendant_resinfinish_pink2.JPG",
-      "claybutterflypendant_resinfinish_silver.JPG",
-      "colorchangeresinpendant_butterflycircle.JPG",
-      "colorchangeresinpendant_butterflycircle2.JPG",
-      "colorchangeresinpendant_butterflyteardrop.JPG",
-      "colorchangingbutterfly_resin.JPG",
-      "colorchangingresin.JPG",
-      "colorchangingresincure.JPG",
-      "darkbluetal_resin earrings.JPG",
-      "elayna1.JPG",
-      "elayna_acrylicpaintings.JPG",
-      "elayna_blueyvest.jpeg",
-      "elayna_figuresketch.JPG",
-      "elayna_loyaldoc13point5.JPG",
-      "elayna_tribalpainting.JPG",
-      "elaynaface.png",
-      "giftbox.JPG",
-      "jewelryhardware_bw.JPG",
-      "prismcurtains.jpeg",
-      "resin_fairywingsblueteal.JPG",
-      "resindayhandmadejewelry_bw.JPG",
-      "resinearrings_bluebutterfly.JPG",
-      "resinearrings_darkblue3pc.JPG",
-      "resinearrings_darkbluebutterfly.JPG",
-      "resinearrings_holographicmushroom.JPG",
-      "resinearrings_tealblue.JPG",
-      "resinjewelry_mushroombutterflywings.JPG",
-      "resinjewelry_mushroomsfairywings.JPG",
-      "resinmushroompendents.JPG",
-      "resinpendents.JPG",
-      "resinpendents_colorchanging.JPG",
-      "resinpicture_bw.JPG",
-      "resinpuzzlepiece_colorchanging.JPG",
-      "resinshapesdaybutterflies_bw.JPG",
-      "resinwings_bluecolorchange.JPG",
-      "somethinggood.JPG",
-      "spiralmirror.JPG",
-      "tilemermaid.jpg",
-      "yellowgreendragonflywings.JPG"
-    ];
+<div class="main">
+  <img src="e_teal.png" class="top-logo">
+  <div id="mosaic"></div>
+</div>
 
-    const gallery = document.getElementById("gallery");
-    const loadIndicator = document.getElementById("loadIndicator");
-    const modal = document.getElementById("imageModal");
-    const modalImg = document.getElementById("modalImg");
-    const modalTitle = document.getElementById("modalTitle");
-    const modalOpenFile = document.getElementById("modalOpenFile");
-    const modalClose = document.getElementById("modalClose");
-    const searchToggle = document.getElementById("searchToggle");
-    const searchPanel = document.getElementById("searchPanel");
-    const searchInput = document.getElementById("searchInput");
+<script>
+// SAMPLE IMAGE LIST (replace with yours)
+const allImages = [
+  "image1.jpg",
+  "image2.jpg",
+  "purple_flower.jpg",
+  "mushroom_art.jpg",
+  "e_teal.png",
+  "e_purple.png",
+  "ChatGPT Image Mar 29, 2026, 04 07 13 PM.png"
+];
 
-    const BATCH_SIZE = 12;
-    let filteredImages = [...imageFiles];
-    let renderedCount = 0;
-    let isLoading = false;
+// EXCLUDE LIST
+const EXCLUDE_IMAGES = [
+  "e_purple.png",
+  "e_teal.png",
+  "ChatGPT Image Mar 29, 2026, 04 07 13 PM.png"
+];
 
-    function prettyName(filename) {
-      return filename
-        .replace(/\.[^/.]+$/, "")
-        .replace(/[_-]+/g, " ")
-        .replace(/\s+/g, " ")
-        .trim();
+let usedImages = new Set();
+
+function shouldExclude(src) {
+  return EXCLUDE_IMAGES.some(name => src.includes(name));
+}
+
+function getUniqueImages(images) {
+  const unique = [];
+  usedImages.clear();
+
+  for (let img of images) {
+    if (!shouldExclude(img) && !usedImages.has(img)) {
+      usedImages.add(img);
+      unique.push(img);
     }
+  }
 
-    function createCard(filename) {
-      const card = document.createElement("article");
-      card.className = "card";
+  return unique;
+}
 
-      const img = document.createElement("img");
-      img.src = `img/${filename}`;
-      img.alt = prettyName(filename);
-      img.loading = "lazy";
-      img.decoding = "async";
+function renderMosaic(images) {
+  const container = document.getElementById("mosaic");
+  container.innerHTML = "";
 
-      const caption = document.createElement("div");
-      caption.className = "caption";
-      caption.textContent = prettyName(filename);
+  const filtered = getUniqueImages(images);
 
-      card.appendChild(img);
-      card.appendChild(caption);
+  filtered.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.className = "mosaic-item";
+    container.appendChild(img);
+  });
+}
 
-      card.addEventListener("click", () => {
-        modalImg.src = `img/${filename}`;
-        modalImg.alt = prettyName(filename);
-        modalTitle.textContent = prettyName(filename);
-        modalOpenFile.href = `img/${filename}`;
-        modal.classList.add("open");
-        modal.setAttribute("aria-hidden", "false");
-      });
+function filterByKeyword(keyword) {
+  const filtered = allImages.filter(img =>
+    img.toLowerCase().includes(keyword.toLowerCase()) &&
+    !shouldExclude(img)
+  );
 
-      return card;
-    }
+  renderMosaic(filtered);
+}
 
-    function renderNextBatch() {
-      if (isLoading) return;
-      if (renderedCount >= filteredImages.length) {
-        loadIndicator.textContent = filteredImages.length ? "All images loaded." : "No matching images.";
-        return;
-      }
+renderMosaic(allImages);
+</script>
 
-      isLoading = true;
-      loadIndicator.textContent = "Loading more images…";
-
-      const nextItems = filteredImages.slice(renderedCount, renderedCount + BATCH_SIZE);
-      nextItems.forEach(file => gallery.appendChild(createCard(file)));
-      renderedCount += nextItems.length;
-      isLoading = false;
-
-      if (renderedCount >= filteredImages.length) {
-        loadIndicator.textContent = "All images loaded.";
-      }
-    }
-
-    function resetGallery(newList) {
-      filteredImages = [...newList];
-      renderedCount = 0;
-      gallery.innerHTML = "";
-      renderNextBatch();
-    }
-
-    function handleScrollLoad() {
-      const scrollBottom = window.innerHeight + window.scrollY;
-      const threshold = document.body.offsetHeight - 900;
-      if (scrollBottom >= threshold) {
-        renderNextBatch();
-      }
-    }
-
-    searchToggle.addEventListener("click", () => {
-      const open = searchPanel.classList.toggle("open");
-      document.body.classList.toggle("menu-open", open);
-      searchToggle.setAttribute("aria-expanded", open ? "true" : "false");
-      if (open) searchInput.focus();
-    });
-
-    document.addEventListener("click", (e) => {
-      const clickedInsidePanel = searchPanel.contains(e.target);
-      const clickedToggle = searchToggle.contains(e.target);
-
-      if (!clickedInsidePanel && !clickedToggle && searchPanel.classList.contains("open")) {
-        searchPanel.classList.remove("open");
-        document.body.classList.remove("menu-open");
-        searchToggle.setAttribute("aria-expanded", "false");
-      }
-    });
-
-    searchInput.addEventListener("input", (e) => {
-      const query = e.target.value.toLowerCase().trim();
-      if (!query) {
-        resetGallery(imageFiles);
-        return;
-      }
-
-      const results = imageFiles.filter(file => file.toLowerCase().includes(query));
-      resetGallery(results);
-    });
-
-    modalClose.addEventListener("click", () => {
-      modal.classList.remove("open");
-      modal.setAttribute("aria-hidden", "true");
-      modalImg.src = "";
-    });
-
-    modal.addEventListener("click", (e) => {
-      if (e.target === modal) {
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-        modalImg.src = "";
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        searchPanel.classList.remove("open");
-        document.body.classList.remove("menu-open");
-        searchToggle.setAttribute("aria-expanded", "false");
-
-        modal.classList.remove("open");
-        modal.setAttribute("aria-hidden", "true");
-        modalImg.src = "";
-      }
-    });
-
-    window.addEventListener("scroll", handleScrollLoad, { passive: true });
-
-    // initial render
-    renderNextBatch();
-  </script>
 </body>
 </html>
