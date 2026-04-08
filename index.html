@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+<head>a
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Artwork by Elayna</title>
+  <title>Wings and Wonder - Artwork by Elayna MacMaster - Elayna.Studio/Elayna.Online</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -270,6 +270,7 @@
       background: transparent;
       text-decoration: none;
       transition: background 0.2s ease, transform 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .nav-link:hover {
@@ -306,6 +307,34 @@
       transform: translate(4px, -50%);
     }
 
+    .icon-label {
+      position: absolute;
+      bottom: 2px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(0,0,0,0.82);
+      color: #fff;
+      font-size: 0.55rem;
+      line-height: 1;
+      padding: 4px 6px;
+      border-radius: 999px;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+      transform-origin: center;
+      max-width: 70px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .nav-link:hover .icon-label,
+    .nav-link.show-label .icon-label,
+    .nav-link:focus-visible .icon-label {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
     .main {
       margin-left: var(--sidebar-width);
       padding: 18px 18px 40px;
@@ -320,6 +349,8 @@
 
     .card {
       break-inside: avoid;
+      -webkit-column-break-inside: avoid;
+      page-break-inside: avoid;
       margin: 0 0 16px;
       display: inline-block;
       width: 100%;
@@ -476,20 +507,50 @@
       }
 
       .main {
-        padding: 14px 12px 28px;
+        padding: 14px 10px 28px;
       }
 
       .card {
         margin-bottom: 12px;
+        border-radius: 18px;
+      }
+
+      .card .caption {
+        padding: 8px 10px 10px;
+        font-size: 0.8rem;
+      }
+
+      .icon-label {
+        font-size: 0.5rem;
+        max-width: 62px;
       }
     }
 
     @media (max-width: 520px) {
-      .masonry { column-count: 1; }
-      .search-links { grid-template-columns: 1fr; }
+      .masonry {
+        column-count: 1;
+        column-gap: 0;
+      }
+
+      .main {
+        padding: 12px 8px 24px;
+      }
+
+      .search-links {
+        grid-template-columns: 1fr;
+      }
 
       .nav-link .tooltip {
         display: none;
+      }
+
+      .modal {
+        padding: 12px;
+      }
+
+      .modal-inner {
+        max-width: 100%;
+        border-radius: 18px;
       }
     }
   </style>
@@ -507,34 +568,49 @@
       <a class="nav-link" href="#" data-name="Butterfly">
         <img src="svg/butterfly.svg" alt="Butterfly">
         <span class="tooltip">Butterfly</span>
+        <span class="icon-label">Butterfly</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Fairy">
         <img src="svg/fairy.svg" alt="Fairy">
         <span class="tooltip">Fairy</span>
+        <span class="icon-label">Fairy</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Friends">
         <img src="svg/friends.svg" alt="Friends">
         <span class="tooltip">Friends</span>
+        <span class="icon-label">Friends</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Info">
         <img src="svg/info.svg" alt="Info">
         <span class="tooltip">Info</span>
+        <span class="icon-label">Info</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Mushroom">
         <img src="svg/mushroom.svg" alt="Mushroom">
         <span class="tooltip">Mushroom</span>
+        <span class="icon-label">Mushroom</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Product">
         <img src="svg/product.svg" alt="Product">
         <span class="tooltip">Product</span>
+        <span class="icon-label">Product</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Share">
         <img src="svg/share.svg" alt="Share">
         <span class="tooltip">Share</span>
+        <span class="icon-label">Share</span>
       </a>
+
       <a class="nav-link" href="#" data-name="Shop">
         <img src="svg/shop.svg" alt="Shop">
         <span class="tooltip">Shop</span>
+        <span class="icon-label">Shop</span>
       </a>
     </nav>
   </aside>
@@ -584,7 +660,7 @@
 
   <main class="main">
     <section class="masonry" id="gallery"></section>
-    <div class="load-indicator" id="loadIndicator">Loading more images…</div>
+    <div class="load-indicator" id="loadIndicator">Checking image library…</div>
   </main>
 
   <div class="modal" id="imageModal" aria-hidden="true">
@@ -670,7 +746,8 @@
     const searchInput = document.getElementById("searchInput");
 
     const BATCH_SIZE = 12;
-    let filteredImages = [...imageFiles];
+    let validImages = [];
+    let filteredImages = [];
     let renderedCount = 0;
     let isLoading = false;
 
@@ -680,6 +757,29 @@
         .replace(/[_-]+/g, " ")
         .replace(/\s+/g, " ")
         .trim();
+    }
+
+    function verifyImage(filename) {
+      return new Promise((resolve) => {
+        const tester = new Image();
+        tester.onload = () => resolve(filename);
+        tester.onerror = () => resolve(null);
+        tester.src = `img/${filename}`;
+      });
+    }
+
+    async function buildValidImageList() {
+      loadIndicator.textContent = "Checking image library…";
+      const checked = await Promise.all(imageFiles.map(verifyImage));
+
+      validImages = checked
+        .filter(Boolean)
+        .filter(name => !/^E_(purple|teal)\.png$/i.test(name));
+
+      filteredImages = [...validImages];
+      renderedCount = 0;
+      gallery.innerHTML = "";
+      renderNextBatch();
     }
 
     function createCard(filename) {
@@ -713,6 +813,7 @@
 
     function renderNextBatch() {
       if (isLoading) return;
+
       if (renderedCount >= filteredImages.length) {
         loadIndicator.textContent = filteredImages.length ? "All images loaded." : "No matching images.";
         return;
@@ -726,9 +827,10 @@
       renderedCount += nextItems.length;
       isLoading = false;
 
-      if (renderedCount >= filteredImages.length) {
-        loadIndicator.textContent = "All images loaded.";
-      }
+      loadIndicator.textContent =
+        renderedCount >= filteredImages.length
+          ? "All images loaded."
+          : "Scroll for more images…";
     }
 
     function resetGallery(newList) {
@@ -767,11 +869,11 @@
     searchInput.addEventListener("input", (e) => {
       const query = e.target.value.toLowerCase().trim();
       if (!query) {
-        resetGallery(imageFiles);
+        resetGallery(validImages);
         return;
       }
 
-      const results = imageFiles.filter(file => file.toLowerCase().includes(query));
+      const results = validImages.filter(file => file.toLowerCase().includes(query));
       resetGallery(results);
     });
 
@@ -798,13 +900,38 @@
         modal.classList.remove("open");
         modal.setAttribute("aria-hidden", "true");
         modalImg.src = "";
+
+        document.querySelectorAll(".nav-link.show-label").forEach(el => {
+          el.classList.remove("show-label");
+        });
+      }
+    });
+
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", (e) => {
+        if (link.getAttribute("href") === "#") {
+          e.preventDefault();
+        }
+
+        document.querySelectorAll(".nav-link.show-label").forEach(el => {
+          if (el !== link) el.classList.remove("show-label");
+        });
+
+        link.classList.toggle("show-label");
+      });
+    });
+
+    document.addEventListener("click", (e) => {
+      if (!e.target.closest(".nav-link")) {
+        document.querySelectorAll(".nav-link.show-label").forEach(el => {
+          el.classList.remove("show-label");
+        });
       }
     });
 
     window.addEventListener("scroll", handleScrollLoad, { passive: true });
 
-    // initial render
-    renderNextBatch();
+    buildValidImageList();
   </script>
 </body>
 </html>
