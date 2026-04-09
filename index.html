@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>a
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wings and Wonder - Artwork by Elayna MacMaster - Elayna.Studio/Elayna.Online</title>
@@ -645,7 +645,7 @@
         <circle cx="11" cy="11" r="7" stroke="currentColor"></circle>
         <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round"></path>
       </svg>
-      <input type="text" id="searchInput" placeholder="Search images by filename..." />
+      <input type="text" id="searchInput" placeholder="Search images by filename, description, or category..." />
     </div>
 
     <div class="search-links">
@@ -660,7 +660,7 @@
 
   <main class="main">
     <section class="masonry" id="gallery"></section>
-    <div class="load-indicator" id="loadIndicator">Checking image library…</div>
+    <div class="load-indicator" id="loadIndicator">Loading image list…</div>
   </main>
 
   <div class="modal" id="imageModal" aria-hidden="true">
@@ -679,60 +679,7 @@
   </div>
 
   <script>
-    const imageFiles = [
-      "ChatGPT Image Mar 29, 2026, 04_07_13 PM.png",
-      "E_purple.png",
-      "E_teal.png",
-      "Resized_20260329_181222_1774836313602.jpeg",
-      "assortedresinpendents.JPG",
-      "better.JPG",
-      "blahblah.png",
-      "bluepink_bluepinkeardrop.JPG",
-      "blueresinmushrooms.JPG",
-      "bottle.jpeg",
-      "claybutterfly_keychain_silverpink.JPG",
-      "claybutterflykeychain_resinfinish_pink.JPG",
-      "claybutterflypendant_resinfinish_pink.JPG",
-      "claybutterflypendant_resinfinish_pink2.JPG",
-      "claybutterflypendant_resinfinish_silver.JPG",
-      "colorchangeresinpendant_butterflycircle.JPG",
-      "colorchangeresinpendant_butterflycircle2.JPG",
-      "colorchangeresinpendant_butterflyteardrop.JPG",
-      "colorchangingbutterfly_resin.JPG",
-      "colorchangingresin.JPG",
-      "colorchangingresincure.JPG",
-      "darkbluetal_resin earrings.JPG",
-      "elayna1.JPG",
-      "elayna_acrylicpaintings.JPG",
-      "elayna_blueyvest.jpeg",
-      "elayna_figuresketch.JPG",
-      "elayna_loyaldoc13point5.JPG",
-      "elayna_tribalpainting.JPG",
-      "elaynaface.png",
-      "giftbox.JPG",
-      "jewelryhardware_bw.JPG",
-      "prismcurtains.jpeg",
-      "resin_fairywingsblueteal.JPG",
-      "resindayhandmadejewelry_bw.JPG",
-      "resinearrings_bluebutterfly.JPG",
-      "resinearrings_darkblue3pc.JPG",
-      "resinearrings_darkbluebutterfly.JPG",
-      "resinearrings_holographicmushroom.JPG",
-      "resinearrings_tealblue.JPG",
-      "resinjewelry_mushroombutterflywings.JPG",
-      "resinjewelry_mushroomsfairywings.JPG",
-      "resinmushroompendents.JPG",
-      "resinpendents.JPG",
-      "resinpendents_colorchanging.JPG",
-      "resinpicture_bw.JPG",
-      "resinpuzzlepiece_colorchanging.JPG",
-      "resinshapesdaybutterflies_bw.JPG",
-      "resinwings_bluecolorchange.JPG",
-      "somethinggood.JPG",
-      "spiralmirror.JPG",
-      "tilemermaid.jpg",
-      "yellowgreendragonflywings.JPG"
-    ];
+    const IMAGE_LIST_PATH = "images.txt";
 
     const gallery = document.getElementById("gallery");
     const loadIndicator = document.getElementById("loadIndicator");
@@ -746,8 +693,10 @@
     const searchInput = document.getElementById("searchInput");
 
     const BATCH_SIZE = 12;
-    let validImages = [];
-    let filteredImages = [];
+
+    let allItems = [];
+    let validItems = [];
+    let filteredItems = [];
     let renderedCount = 0;
     let isLoading = false;
 
@@ -759,51 +708,101 @@
         .trim();
     }
 
-    function verifyImage(filename) {
+    function parseList(text) {
+      return text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => line && !line.startsWith("#"))
+        .map(line => {
+          const parts = line.split("|").map(part => part.trim());
+          return {
+            filename: parts[0] || "",
+            description: parts[1] || "",
+            category: parts[2] || ""
+          };
+        })
+        .filter(item => item.filename);
+    }
+
+    function verifyImage(item) {
       return new Promise((resolve) => {
         const tester = new Image();
-        tester.onload = () => resolve(filename);
+        tester.onload = () => resolve(item);
         tester.onerror = () => resolve(null);
-        tester.src = `img/${filename}`;
+        tester.src = `img/${item.filename}`;
       });
     }
 
-    async function buildValidImageList() {
-      loadIndicator.textContent = "Checking image library…";
-      const checked = await Promise.all(imageFiles.map(verifyImage));
+    async function loadImageList() {
+      loadIndicator.textContent = "Loading image list…";
 
-      validImages = checked
-        .filter(Boolean)
-        .filter(name => !/^E_(purple|teal)\.png$/i.test(name));
+      try {
+        const response = await fetch(IMAGE_LIST_PATH, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Could not load ${IMAGE_LIST_PATH}`);
+        }
 
-      filteredImages = [...validImages];
-      renderedCount = 0;
-      gallery.innerHTML = "";
-      renderNextBatch();
+        const text = await response.text();
+        allItems = parseList(text);
+
+        loadIndicator.textContent = "Checking image library…";
+        const checked = await Promise.all(allItems.map(verifyImage));
+
+        validItems = checked
+          .filter(Boolean)
+          .filter(item => !/^E_(purple|teal)\.png$/i.test(item.filename));
+
+        filteredItems = [...validItems];
+        renderedCount = 0;
+        gallery.innerHTML = "";
+        renderNextBatch();
+      } catch (error) {
+        console.error(error);
+        gallery.innerHTML = "";
+        loadIndicator.textContent = `Could not load ${IMAGE_LIST_PATH}`;
+      }
     }
 
-    function createCard(filename) {
+    function buildSearchText(item) {
+      return [
+        item.filename || "",
+        item.description || "",
+        item.category || "",
+        prettyName(item.filename || "")
+      ].join(" ").toLowerCase();
+    }
+
+    function getDisplayTitle(item) {
+      if (item.description && item.description.trim()) {
+        return item.description.trim();
+      }
+      return prettyName(item.filename);
+    }
+
+    function createCard(item) {
       const card = document.createElement("article");
       card.className = "card";
 
       const img = document.createElement("img");
-      img.src = `img/${filename}`;
-      img.alt = prettyName(filename);
+      img.src = `img/${item.filename}`;
+      img.alt = getDisplayTitle(item);
       img.loading = "lazy";
       img.decoding = "async";
 
-      const caption = document.createElement("div");
-      caption.className = "caption";
-      caption.textContent = prettyName(filename);
-
       card.appendChild(img);
-      card.appendChild(caption);
+
+      if (item.description && item.description.trim()) {
+        const caption = document.createElement("div");
+        caption.className = "caption";
+        caption.textContent = item.description.trim();
+        card.appendChild(caption);
+      }
 
       card.addEventListener("click", () => {
-        modalImg.src = `img/${filename}`;
-        modalImg.alt = prettyName(filename);
-        modalTitle.textContent = prettyName(filename);
-        modalOpenFile.href = `img/${filename}`;
+        modalImg.src = `img/${item.filename}`;
+        modalImg.alt = getDisplayTitle(item);
+        modalTitle.textContent = getDisplayTitle(item);
+        modalOpenFile.href = `img/${item.filename}`;
         modal.classList.add("open");
         modal.setAttribute("aria-hidden", "false");
       });
@@ -814,27 +813,27 @@
     function renderNextBatch() {
       if (isLoading) return;
 
-      if (renderedCount >= filteredImages.length) {
-        loadIndicator.textContent = filteredImages.length ? "All images loaded." : "No matching images.";
+      if (renderedCount >= filteredItems.length) {
+        loadIndicator.textContent = filteredItems.length ? "All images loaded." : "No matching images.";
         return;
       }
 
       isLoading = true;
       loadIndicator.textContent = "Loading more images…";
 
-      const nextItems = filteredImages.slice(renderedCount, renderedCount + BATCH_SIZE);
-      nextItems.forEach(file => gallery.appendChild(createCard(file)));
+      const nextItems = filteredItems.slice(renderedCount, renderedCount + BATCH_SIZE);
+      nextItems.forEach(item => gallery.appendChild(createCard(item)));
       renderedCount += nextItems.length;
       isLoading = false;
 
       loadIndicator.textContent =
-        renderedCount >= filteredImages.length
+        renderedCount >= filteredItems.length
           ? "All images loaded."
           : "Scroll for more images…";
     }
 
     function resetGallery(newList) {
-      filteredImages = [...newList];
+      filteredItems = [...newList];
       renderedCount = 0;
       gallery.innerHTML = "";
       renderNextBatch();
@@ -868,12 +867,13 @@
 
     searchInput.addEventListener("input", (e) => {
       const query = e.target.value.toLowerCase().trim();
+
       if (!query) {
-        resetGallery(validImages);
+        resetGallery(validItems);
         return;
       }
 
-      const results = validImages.filter(file => file.toLowerCase().includes(query));
+      const results = validItems.filter(item => buildSearchText(item).includes(query));
       resetGallery(results);
     });
 
@@ -931,7 +931,7 @@
 
     window.addEventListener("scroll", handleScrollLoad, { passive: true });
 
-    buildValidImageList();
+    loadImageList();
   </script>
 </body>
 </html>
