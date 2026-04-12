@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Wings and Wonder - Artwork by Elayna MacMaster - Elayna.Studio/Elayna.Online</title>
+  <link rel="icon" type="image/svg+xml" href="svg/butterfly.svg">
+  <link rel="shortcut icon" href="svg/butterfly.svg">
+  <link rel="apple-touch-icon" href="svg/butterfly.svg">
   <style>
     * { box-sizing: border-box; }
 
@@ -235,6 +238,13 @@
       gap: 12px;
     }
 
+    .menu-wrap {
+      position: relative;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+
     .menu-badge {
       width: 44px;
       height: 44px;
@@ -248,10 +258,61 @@
       margin-bottom: 4px;
     }
 
+    .menu-toggle {
+      cursor: pointer;
+      appearance: none;
+    }
+
     .menu-badge svg {
       width: 20px;
       height: 20px;
       stroke: #333;
+    }
+
+    .menu-dropdown {
+      position: absolute;
+      top: 54px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-8px);
+      min-width: 150px;
+      background: rgba(255,255,255,0.96);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0,0,0,0.08);
+      border-radius: 18px;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.16);
+      padding: 8px;
+      display: grid;
+      gap: 6px;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.22s ease, transform 0.22s ease, visibility 0.22s ease;
+      z-index: 1200;
+    }
+
+    .menu-dropdown.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .menu-dropdown-link {
+      appearance: none;
+      border: none;
+      background: #fff;
+      color: #222;
+      text-align: left;
+      padding: 10px 12px;
+      border-radius: 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.18s ease, transform 0.18s ease;
+    }
+
+    .menu-dropdown-link:hover {
+      background: #f5f5f5;
+      transform: translateY(-1px);
     }
 
     .nav-icons {
@@ -543,6 +604,113 @@
       color: #222;
     }
 
+    .page-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 2200;
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 0.24s ease, visibility 0.24s ease;
+    }
+
+    .page-modal.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .page-modal-shell {
+      position: relative;
+      width: min(520px, 88vw);
+      min-height: min(520px, 88vw);
+      max-height: 88vh;
+      border-radius: 50%;
+      background: radial-gradient(circle at 30% 30%, #ffffff 0%, #f8f8f8 58%, #efefef 100%);
+      border: 2px solid rgba(181, 124, 255, 0.45);
+      box-shadow:
+        0 18px 40px rgba(0,0,0,0.22),
+        0 0 22px rgba(42, 211, 201, 0.16),
+        0 0 28px rgba(181, 124, 255, 0.14);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 72px 56px;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    .page-modal-content {
+      max-width: 280px;
+    }
+
+    .page-modal-content h2 {
+      margin: 0 0 12px;
+      font-size: 1.35rem;
+    }
+
+    .page-modal-content p {
+      margin: 0 0 10px;
+      line-height: 1.5;
+      color: #444;
+      font-size: 0.95rem;
+    }
+
+    .page-modal-close {
+      position: absolute;
+      top: 22px;
+      right: 26px;
+      width: 38px;
+      height: 38px;
+      border: none;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.08);
+      color: #222;
+      font-size: 1.35rem;
+      cursor: pointer;
+    }
+
+    .sparkle-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 3000;
+      overflow: hidden;
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255,255,255,0.95) 0%, rgba(42,211,201,0.8) 45%, rgba(181,124,255,0.1) 100%);
+      box-shadow:
+        0 0 10px rgba(255,255,255,0.9),
+        0 0 16px rgba(42,211,201,0.5),
+        0 0 22px rgba(181,124,255,0.45);
+      animation: sparklePop 2.8s ease-out forwards;
+    }
+
+    @keyframes sparklePop {
+      0% {
+        opacity: 0;
+        transform: scale(0.2) translateY(0);
+      }
+      15% {
+        opacity: 1;
+        transform: scale(1) translateY(-6px);
+      }
+      100% {
+        opacity: 0;
+        transform: scale(0.4) translateY(-36px);
+      }
+    }
+
     @media (max-width: 1400px) {
       .masonry { column-count: 4; }
     }
@@ -602,6 +770,16 @@
       .text-block-body {
         font-size: 0.9rem;
       }
+
+      .page-modal-shell {
+        width: min(86vw, 420px);
+        min-height: min(86vw, 420px);
+        padding: 62px 38px;
+      }
+
+      .page-modal-content {
+        max-width: 230px;
+      }
     }
 
     @media (max-width: 520px) {
@@ -636,10 +814,19 @@
 <body>
 
   <aside class="sidebar">
-    <div class="menu-badge" aria-hidden="true">
-      <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round"/>
-      </svg>
+    <div class="menu-wrap">
+      <button class="menu-badge menu-toggle" id="menuToggle" aria-label="Open site menu" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+          <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round"/>
+        </svg>
+      </button>
+
+      <div class="menu-dropdown" id="menuDropdown">
+        <button class="menu-dropdown-link" data-page-modal="welcomeModal">Welcome</button>
+        <button class="menu-dropdown-link" data-page-modal="storeModal">Store</button>
+        <button class="menu-dropdown-link" data-page-modal="supportModal">Support</button>
+        <button class="menu-dropdown-link" data-page-modal="contactModal">Contact</button>
+      </div>
     </div>
 
     <nav class="nav-icons">
@@ -756,6 +943,52 @@
     </div>
   </div>
 
+  <div class="page-modal" id="welcomeModal" aria-hidden="true">
+    <div class="page-modal-shell">
+      <button class="page-modal-close" data-close-page-modal>&times;</button>
+      <div class="page-modal-content">
+        <h2>Welcome</h2>
+        <p>Original artwork and handmade jewelry.</p>
+        <p>Wings and Wonder is a growing collection of resin work, paintings, sketches, wings, mushrooms, and dreamlike pieces made by hand.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-modal" id="storeModal" aria-hidden="true">
+    <div class="page-modal-shell">
+      <button class="page-modal-close" data-close-page-modal>&times;</button>
+      <div class="page-modal-content">
+        <h2>Store</h2>
+        <p>Featured pieces, new drops, and future shopping links will live here.</p>
+        <p>You can later swap this text for a shop embed, Etsy link, or curated product categories.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-modal" id="supportModal" aria-hidden="true">
+    <div class="page-modal-shell">
+      <button class="page-modal-close" data-close-page-modal>&times;</button>
+      <div class="page-modal-content">
+        <h2>Support</h2>
+        <p>Support can include commissions, custom requests, gift inquiries, or ways to help this work continue growing.</p>
+        <p>You can also use this space for FAQ or shipping notes later.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-modal" id="contactModal" aria-hidden="true">
+    <div class="page-modal-shell">
+      <button class="page-modal-close" data-close-page-modal>&times;</button>
+      <div class="page-modal-content">
+        <h2>Contact</h2>
+        <p>For now, this can be your contact landing space.</p>
+        <p>Add your preferred email, social link, commission form, or inquiry details here when ready.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="sparkle-layer" id="sparkleLayer" aria-hidden="true"></div>
+
   <script>
     const IMAGE_LIST_PATH = "images.txt";
 
@@ -769,6 +1002,12 @@
     const searchToggle = document.getElementById("searchToggle");
     const searchPanel = document.getElementById("searchPanel");
     const searchInput = document.getElementById("searchInput");
+    const menuToggle = document.getElementById("menuToggle");
+    const menuDropdown = document.getElementById("menuDropdown");
+    const sparkleLayer = document.getElementById("sparkleLayer");
+    const pageModals = document.querySelectorAll(".page-modal");
+    const pageModalLinks = document.querySelectorAll("[data-page-modal]");
+    const pageModalCloseButtons = document.querySelectorAll("[data-close-page-modal]");
 
     const BATCH_SIZE = 12;
 
@@ -855,16 +1094,6 @@
 
         const text = await response.text();
         allItems = parseList(text);
-
-        const introTextBlock = {
-          filename: "Welcome",
-          description: "Original artwork and handmade jewelry",
-          category: "intro",
-          priority: "on",
-          type: "text"
-        };
-
-        allItems.unshift(introTextBlock);
 
         loadIndicator.textContent = "Checking image library…";
         const checked = await Promise.all(allItems.map(verifyItem));
@@ -1019,6 +1248,65 @@
       }
     }
 
+    function closeMenuDropdown() {
+      menuDropdown.classList.remove("open");
+      menuToggle.setAttribute("aria-expanded", "false");
+    }
+
+    function openPageModal(id) {
+      const modalEl = document.getElementById(id);
+      if (!modalEl) return;
+      modalEl.classList.add("open");
+      modalEl.setAttribute("aria-hidden", "false");
+    }
+
+    function closePageModals() {
+      pageModals.forEach(modalEl => {
+        modalEl.classList.remove("open");
+        modalEl.setAttribute("aria-hidden", "true");
+      });
+    }
+
+    function triggerSparkles(count = 24) {
+      const width = window.innerWidth;
+      const height = window.innerHeight;
+
+      for (let i = 0; i < count; i++) {
+        const sparkle = document.createElement("span");
+        sparkle.className = "sparkle";
+        sparkle.style.left = `${Math.random() * width}px`;
+        sparkle.style.top = `${Math.random() * height}px`;
+        sparkle.style.animationDelay = `${Math.random() * 0.6}s`;
+        sparkle.style.transform = `scale(${0.7 + Math.random() * 0.8})`;
+        sparkleLayer.appendChild(sparkle);
+
+        setTimeout(() => sparkle.remove(), 3200);
+      }
+    }
+
+    menuToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      const open = menuDropdown.classList.toggle("open");
+      menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+    });
+
+    pageModalLinks.forEach(link => {
+      link.addEventListener("click", () => {
+        closeMenuDropdown();
+        openPageModal(link.dataset.pageModal);
+      });
+    });
+
+    pageModalCloseButtons.forEach(btn => {
+      btn.addEventListener("click", closePageModals);
+    });
+
+    pageModals.forEach(modalEl => {
+      modalEl.addEventListener("click", (e) => {
+        if (e.target === modalEl) closePageModals();
+      });
+    });
+
     searchToggle.addEventListener("click", () => {
       const open = searchPanel.classList.toggle("open");
       document.body.classList.toggle("menu-open", open);
@@ -1034,6 +1322,10 @@
         searchPanel.classList.remove("open");
         document.body.classList.remove("menu-open");
         searchToggle.setAttribute("aria-expanded", "false");
+      }
+
+      if (!e.target.closest(".menu-wrap")) {
+        closeMenuDropdown();
       }
     });
 
@@ -1065,6 +1357,9 @@
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {
+        closeMenuDropdown();
+        closePageModals();
+
         searchPanel.classList.remove("open");
         document.body.classList.remove("menu-open");
         searchToggle.setAttribute("aria-expanded", "false");
@@ -1102,6 +1397,10 @@
     });
 
     window.addEventListener("scroll", handleScrollLoad, { passive: true });
+
+    setInterval(() => {
+      triggerSparkles(26);
+    }, 30000);
 
     loadImageList();
   </script>
