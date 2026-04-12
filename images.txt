@@ -1,94 +1,95 @@
-# filename | description | category
+# filename | description | category | priority | type
 
-assortedresinpendents.JPG |  |
-better.JPG |  |
-blahblah.png |  |
-bluepink_bluepinkeardrop.JPG |  |
-blueresinmushrooms.JPG |  |
-bottle.jpeg |  |
-claybutterfly_keychain_silverpink.JPG |  |
-claybutterflykeychain_resinfinish_pink.JPG |  |
-claybutterflypendant_resinfinish_pink.JPG |  |
-claybutterflypendant_resinfinish_pink2.JPG |  |
-claybutterflypendant_resinfinish_silver.JPG |  |
-colorchangeresinpendant_butterflycircle.JPG |  |
-colorchangeresinpendant_butterflycircle2.JPG |  |
-colorchangeresinpendant_butterflyteardrop.JPG |  |
-colorchangingbutterfly_resin.JPG |  |
-colorchangingresin.JPG |  |
-colorchangingresincure.JPG |  |
-darkbluetal_resin earrings.JPG |  |
-elayna1.JPG |  |
-elayna_acrylicpaintings.JPG |  |
-elayna_blueyvest.jpeg |  |
-elayna_figuresketch.JPG |  |
-elayna_loyaldoc13point5.JPG |  |
-elayna_tribalpainting.JPG |  |
-elaynaface.png |  |
-giftbox.JPG |  |
-jewelryhardware_bw.JPG |  |
-prismcurtains.jpeg |  |
-resin_fairywingsblueteal.JPG |  |
-resindayhandmadejewelry_bw.JPG |  |
-resinearrings_bluebutterfly.JPG |  |
-resinearrings_darkblue3pc.JPG |  |
-resinearrings_darkbluebutterfly.JPG |  |
-resinearrings_holographicmushroom.JPG |  |
-resinearrings_tealblue.JPG |  |
-resinjewelry_mushroombutterflywings.JPG |  |
-resinjewelry_mushroomsfairywings.JPG |  |
-resinmushroompendents.JPG |  |
-resinpendents.JPG |  |
-resinpendents_colorchanging.JPG |  |
-resinpicture_bw.JPG |  |
-resinpuzzlepiece_colorchanging.JPG |  |
-resinshapesdaybutterflies_bw.JPG |  |
-resinwings_bluecolorchange.JPG |  |
-somethinggood.JPG |  |
-spiralmirror.JPG |  |
-tilemermaid.jpg |  |
-yellowgreendragonflywings.JPG |  |
-product_9875.webp |  | 
-product_9876.webp |  | 
-product_9877.webp |  | 
-product_9878.webp |  | 
-product_9879.webp |  | 
-product_9880.webp |  | 
-product_9881.webp |  | 
-product_9882.webp |  | 
-product_9883.webp |  | 
-product_9884.webp |  | 
-product_9885.webp |  | 
-product_9886.webp |  | 
-product_9887.webp |  | 
-product_9888.webp |  | 
-product_9889.webp |  | 
-product_9890.webp |  | 
-product_9895.webp |  | 
-product_9896.webp |  | 
-product_9897.webp |  | 
-product_9898.webp |  | 
-product_9899.webp |  | 
-product_9900.webp |  | 
-product_9901.webp |  | 
-product_9902.webp |  | 
-product_9903.webp |  | 
-product_9904.webp |  | 
-product_9905.webp |  | 
-product_9906.webp |  | 
-product_9907.webp |  | 
-product_9908.webp |  | 
-product_9909.webp |  | 
-product_9910.webp |  | 
-product_9911.webp |  | 
-product_9912.webp |  | 
-product_9913.webp |  | 
-product_9914.webp |  | 
-product_9915.webp |  | 
-product_9916.webp |  | 
-product_9917.webp |  | 
-product_9918.webp |  | 
-product_9919.webp |  | 
-product_9920.webp |  | 
-product_9921.webp |  | 
-product_9922.webp |  | 
+Elayna.Studio | Original Artwork Inspired By Nature, Light, and Imagination | intro | on | text
+assortedresinpendents.JPG |  |  |  | image
+better.JPG |  |  |  | image
+blahblah.png |  |  |  | image
+bluepink_bluepinkeardrop.JPG |  |  |  | image
+blueresinmushrooms.JPG |  |  |  | image
+bottle.jpeg |  |  |  | image
+claybutterfly_keychain_silverpink.JPG |  |  |  | image
+claybutterflykeychain_resinfinish_pink.JPG |  |  |  | image
+claybutterflypendant_resinfinish_pink.JPG |  |  |  | image
+claybutterflypendant_resinfinish_pink2.JPG |  |  |  | image
+claybutterflypendant_resinfinish_silver.JPG |  |  |  | image
+colorchangeresinpendant_butterflycircle.JPG |  |  |  | image
+colorchangeresinpendant_butterflycircle2.JPG |  |  |  | image
+colorchangeresinpendant_butterflyteardrop.JPG |  |  |  | image
+colorchangingbutterfly_resin.JPG |  |  |  | image
+colorchangingresin.JPG |  |  |  | image
+colorchangingresincure.JPG |  |  |  | image
+darkbluetal_resin earrings.JPG |  |  |  | image
+elayna1.JPG |  |  |  | image
+elayna_acrylicpaintings.JPG |  |  |  | image
+elayna_blueyvest.jpeg |  |  |  | image
+elayna_figuresketch.JPG |  |  |  | image
+elayna_loyaldoc13point5.JPG |  |  |  | image
+elayna_tribalpainting.JPG |  |  |  | image
+elaynaface.png |  |  |  | image
+giftbox.JPG |  |  |  | image
+jewelryhardware_bw.JPG |  |  |  | image
+prismcurtains.jpeg |  |  |  | image
+resin_fairywingsblueteal.JPG |  |  |  | image
+resindayhandmadejewelry_bw.JPG |  |  |  | image
+resinearrings_bluebutterfly.JPG |  |  |  | image
+resinearrings_darkblue3pc.JPG |  |  |  | image
+resinearrings_darkbluebutterfly.JPG |  |  |  | image
+resinearrings_holographicmushroom.JPG |  |  |  | image
+resinearrings_tealblue.JPG |  |  |  | image
+resinjewelry_mushroombutterflywings.JPG |  |  |  | image
+resinjewelry_mushroomsfairywings.JPG |  |  |  | image
+resinmushroompendents.JPG |  |  |  | image
+resinpendents.JPG |  |  |  | image
+resinpendents_colorchanging.JPG |  |  |  | image
+resinpicture_bw.JPG |  |  |  | image
+resinpuzzlepiece_colorchanging.JPG |  |  |  | image
+resinshapesdaybutterflies_bw.JPG |  |  |  | image
+resinwings_bluecolorchange.JPG |  |  |  | image
+somethinggood.JPG |  |  |  | image
+spiralmirror.JPG |  |  |  | image
+tilemermaid.jpg |  |  |  | image
+yellowgreendragonflywings.JPG |  |  |  | image
+product_9875.webp |  |  |  | image
+product_9876.webp |  |  |  | image
+product_9877.webp |  |  |  | image
+product_9878.webp |  |  |  | image
+product_9879.webp |  |  |  | image
+product_9880.webp |  |  |  | image
+product_9881.webp |  |  |  | image
+product_9882.webp |  |  |  | image
+product_9883.webp |  |  |  | image
+product_9884.webp |  |  |  | image
+product_9885.webp |  |  |  | image
+product_9886.webp |  |  |  | image
+product_9887.webp |  |  |  | image
+product_9888.webp |  |  |  | image
+product_9889.webp |  |  |  | image
+product_9890.webp |  |  |  | image
+product_9895.webp |  |  |  | image
+product_9896.webp |  |  |  | image
+product_9897.webp |  |  |  | image
+product_9898.webp |  |  |  | image
+product_9899.webp |  |  |  | image
+product_9900.webp |  |  |  | image
+product_9901.webp |  |  |  | image
+product_9902.webp |  |  |  | image
+product_9903.webp |  |  |  | image
+product_9904.webp |  |  |  | image
+product_9905.webp |  |  |  | image
+product_9906.webp |  |  |  | image
+product_9907.webp |  |  |  | image
+product_9908.webp |  |  |  | image
+product_9909.webp |  |  |  | image
+product_9910.webp |  |  |  | image
+product_9911.webp |  |  |  | image
+product_9912.webp |  |  |  | image
+product_9913.webp |  |  |  | image
+product_9914.webp |  |  |  | image
+product_9915.webp |  |  |  | image
+product_9916.webp |  |  |  | image
+product_9917.webp |  |  |  | image
+product_9918.webp |  |  |  | image
+product_9919.webp |  |  |  | image
+product_9920.webp |  |  |  | image
+product_9921.webp |  |  |  | image
+product_9922.webp |  |  |  | image
