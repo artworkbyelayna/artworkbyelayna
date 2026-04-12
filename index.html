@@ -25,6 +25,10 @@
       --radius: 20px;
       --shadow: 0 3px 12px rgba(0,0,0,0.08);
       --shadow-hover: 0 10px 24px rgba(0,0,0,0.14);
+      --teal-border: rgba(42, 211, 201, 0.7);
+      --purple-border: rgba(181, 124, 255, 0.7);
+      --teal-glow: rgba(42, 211, 201, 0.18);
+      --purple-glow: rgba(181, 124, 255, 0.18);
     }
 
     .topbar {
@@ -358,14 +362,27 @@
       overflow: hidden;
       background: #fff;
       box-shadow: var(--shadow);
-      transition: transform 0.24s ease, box-shadow 0.24s ease;
+      transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
       cursor: pointer;
       position: relative;
+      border: 2px solid transparent;
+    }
+
+    .card:nth-child(odd) {
+      border-color: var(--teal-border);
+    }
+
+    .card:nth-child(even) {
+      border-color: var(--purple-border);
     }
 
     .card:hover {
       transform: translateY(-4px);
-      box-shadow: var(--shadow-hover);
+      box-shadow:
+        var(--shadow-hover),
+        0 0 0 1px rgba(255,255,255,0.45),
+        0 0 10px var(--teal-glow),
+        0 0 14px var(--purple-glow);
     }
 
     .card img {
@@ -382,6 +399,54 @@
       line-height: 1.35;
       background: #fff;
       word-break: break-word;
+    }
+
+    .card.text-block {
+      background: linear-gradient(135deg, #ffffff, #f7f7f7);
+      cursor: default;
+      min-height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 24px 20px;
+    }
+
+    .card.text-block:hover {
+      transform: translateY(-4px);
+    }
+
+    .text-block-content {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .text-block-title {
+      font-size: 1.15rem;
+      line-height: 1.25;
+      font-weight: 700;
+      color: #1f1f1f;
+    }
+
+    .text-block-body {
+      font-size: 0.95rem;
+      line-height: 1.55;
+      color: #444;
+      max-width: 32ch;
+      white-space: pre-wrap;
+    }
+
+    .text-block-category {
+      font-size: 0.7rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #666;
+      background: rgba(0,0,0,0.05);
+      border-radius: 999px;
+      padding: 6px 10px;
     }
 
     .load-indicator {
@@ -524,6 +589,19 @@
         font-size: 0.5rem;
         max-width: 62px;
       }
+
+      .card.text-block {
+        min-height: 150px;
+        padding: 20px 16px;
+      }
+
+      .text-block-title {
+        font-size: 1.02rem;
+      }
+
+      .text-block-body {
+        font-size: 0.9rem;
+      }
     }
 
     @media (max-width: 520px) {
@@ -645,7 +723,7 @@
         <circle cx="11" cy="11" r="7" stroke="currentColor"></circle>
         <path d="M20 20l-3.5-3.5" stroke="currentColor" stroke-linecap="round"></path>
       </svg>
-      <input type="text" id="searchInput" placeholder="Search images by filename, description, or category..." />
+      <input type="text" id="searchInput" placeholder="Search images by filename, description, category, priority, or type..." />
     </div>
 
     <div class="search-links">
@@ -701,7 +779,7 @@
     let isLoading = false;
 
     function prettyName(filename) {
-      return filename
+      return String(filename || "")
         .replace(/\.[^/.]+$/, "")
         .replace(/[_-]+/g, " ")
         .replace(/\s+/g, " ")
@@ -718,13 +796,46 @@
           return {
             filename: parts[0] || "",
             description: parts[1] || "",
-            category: parts[2] || ""
+            category: parts[2] || "",
+            priority: parts[3] || "",
+            type: parts[4] || "image"
           };
-        })
-        .filter(item => item.filename);
+        });
     }
 
-    function verifyImage(item) {
+    function shuffleArray(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function shuffleWithPriority(items) {
+      const priorityItems = [];
+      const normalItems = [];
+
+      items.forEach(item => {
+        if ((item.priority || "").toLowerCase() === "on") {
+          priorityItems.push(item);
+        } else {
+          normalItems.push(item);
+        }
+      });
+
+      return [...priorityItems, ...shuffleArray(normalItems)];
+    }
+
+    function verifyItem(item) {
+      if ((item.type || "").toLowerCase() === "text") {
+        return Promise.resolve(item);
+      }
+
+      if (!item.filename) {
+        return Promise.resolve(null);
+      }
+
       return new Promise((resolve) => {
         const tester = new Image();
         tester.onload = () => resolve(item);
@@ -745,14 +856,27 @@
         const text = await response.text();
         allItems = parseList(text);
 
+        const introTextBlock = {
+          filename: "Welcome",
+          description: "Original artwork and handmade jewelry",
+          category: "intro",
+          priority: "on",
+          type: "text"
+        };
+
+        allItems.unshift(introTextBlock);
+
         loadIndicator.textContent = "Checking image library…";
-        const checked = await Promise.all(allItems.map(verifyImage));
+        const checked = await Promise.all(allItems.map(verifyItem));
 
         validItems = checked
           .filter(Boolean)
-          .filter(item => !/^E_(purple|teal)\.png$/i.test(item.filename));
+          .filter(item => {
+            if ((item.type || "").toLowerCase() === "text") return true;
+            return !/^E_(purple|teal)\.png$/i.test(item.filename);
+          });
 
-        filteredItems = [...validItems];
+        filteredItems = shuffleWithPriority(validItems);
         renderedCount = 0;
         gallery.innerHTML = "";
         renderNextBatch();
@@ -768,18 +892,59 @@
         item.filename || "",
         item.description || "",
         item.category || "",
+        item.priority || "",
+        item.type || "",
         prettyName(item.filename || "")
       ].join(" ").toLowerCase();
     }
 
     function getDisplayTitle(item) {
+      if ((item.type || "").toLowerCase() === "text") {
+        return item.filename && item.filename.trim()
+          ? item.filename.trim()
+          : "Text";
+      }
+
       if (item.description && item.description.trim()) {
         return item.description.trim();
       }
+
       return prettyName(item.filename);
     }
 
-    function createCard(item) {
+    function createTextCard(item) {
+      const card = document.createElement("article");
+      card.className = "card text-block";
+
+      const content = document.createElement("div");
+      content.className = "text-block-content";
+
+      if (item.filename && item.filename.trim()) {
+        const title = document.createElement("div");
+        title.className = "text-block-title";
+        title.textContent = item.filename.trim();
+        content.appendChild(title);
+      }
+
+      if (item.description && item.description.trim()) {
+        const body = document.createElement("div");
+        body.className = "text-block-body";
+        body.textContent = item.description.trim();
+        content.appendChild(body);
+      }
+
+      if (item.category && item.category.trim()) {
+        const category = document.createElement("div");
+        category.className = "text-block-category";
+        category.textContent = item.category.trim();
+        content.appendChild(category);
+      }
+
+      card.appendChild(content);
+      return card;
+    }
+
+    function createImageCard(item) {
       const card = document.createElement("article");
       card.className = "card";
 
@@ -810,16 +975,23 @@
       return card;
     }
 
+    function createCard(item) {
+      if ((item.type || "").toLowerCase() === "text") {
+        return createTextCard(item);
+      }
+      return createImageCard(item);
+    }
+
     function renderNextBatch() {
       if (isLoading) return;
 
       if (renderedCount >= filteredItems.length) {
-        loadIndicator.textContent = filteredItems.length ? "All images loaded." : "No matching images.";
+        loadIndicator.textContent = filteredItems.length ? "All items loaded." : "No matching items.";
         return;
       }
 
       isLoading = true;
-      loadIndicator.textContent = "Loading more images…";
+      loadIndicator.textContent = "Loading more items…";
 
       const nextItems = filteredItems.slice(renderedCount, renderedCount + BATCH_SIZE);
       nextItems.forEach(item => gallery.appendChild(createCard(item)));
@@ -828,12 +1000,12 @@
 
       loadIndicator.textContent =
         renderedCount >= filteredItems.length
-          ? "All images loaded."
-          : "Scroll for more images…";
+          ? "All items loaded."
+          : "Scroll for more items…";
     }
 
     function resetGallery(newList) {
-      filteredItems = [...newList];
+      filteredItems = shuffleWithPriority(newList);
       renderedCount = 0;
       gallery.innerHTML = "";
       renderNextBatch();
