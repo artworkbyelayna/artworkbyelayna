@@ -18,14 +18,10 @@
       font-family: Arial, Helvetica, sans-serif;
     }
 
-    body.menu-open {
-      overflow: hidden;
-    }
-
     :root {
-      --sidebar-width: 78px;
-      --header-height: 72px;
-      --radius: 20px;
+      --sidebar-width: 88px;
+      --header-height: 96px;
+      --radius: 22px;
       --shadow: 0 3px 12px rgba(0,0,0,0.08);
       --shadow-hover: 0 10px 24px rgba(0,0,0,0.14);
       --teal-border: rgba(42, 211, 201, 0.7);
@@ -34,32 +30,36 @@
       --purple-glow: rgba(181, 124, 255, 0.18);
     }
 
+    html, body {
+      overflow-x: hidden;
+    }
+
     .topbar {
       position: sticky;
       top: 0;
       z-index: 1000;
       height: var(--header-height);
-      background: rgba(243,243,243,0.96);
+      background: rgba(243,243,243,0.97);
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(0,0,0,0.08);
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 12px 20px 12px 18px;
+      padding: 14px 24px 14px 22px;
       margin-left: var(--sidebar-width);
     }
 
     .brand {
       display: flex;
       align-items: center;
-      gap: 12px;
+      gap: 16px;
       min-width: 0;
     }
 
     .brand-icon {
-      width: 42px;
-      height: 42px;
+      width: 68px;
+      height: 68px;
       position: relative;
       flex: 0 0 auto;
       overflow: hidden;
@@ -108,11 +108,11 @@
       }
       33.333% {
         opacity: 0;
-        transform: scale(1.06);
+        transform: scale(1.08);
       }
       100% {
         opacity: 0;
-        transform: scale(1.06);
+        transform: scale(1.08);
       }
     }
 
@@ -121,16 +121,16 @@
     }
 
     .brand-title {
-      font-size: 1.18rem;
+      font-size: 1.52rem;
       font-weight: 700;
       letter-spacing: 0.01em;
       line-height: 1.1;
     }
 
     .brand-subtitle {
-      font-size: 0.82rem;
+      font-size: 0.92rem;
       color: #666;
-      margin-top: 4px;
+      margin-top: 6px;
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
@@ -144,8 +144,8 @@
     }
 
     .icon-btn {
-      width: 44px;
-      height: 44px;
+      width: 50px;
+      height: 50px;
       border-radius: 999px;
       border: 1px solid rgba(0,0,0,0.1);
       background: #fff;
@@ -164,8 +164,8 @@
     }
 
     .icon-btn svg {
-      width: 21px;
-      height: 21px;
+      width: 23px;
+      height: 23px;
       stroke: #222;
     }
 
@@ -180,68 +180,64 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 14px 10px;
+      padding: calc(var(--header-height) + 18px) 10px 16px;
       z-index: 1100;
-      gap: 12px;
     }
 
     .nav-icons {
       display: flex;
       flex-direction: column;
-      gap: 12px;
-      margin-top: 8px;
+      gap: 18px;
       width: 100%;
       align-items: center;
     }
 
     .nav-link {
       position: relative;
-      width: 48px;
-      min-height: 62px;
-      border-radius: 16px;
+      width: 58px;
+      height: 58px;
+      border-radius: 18px;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 4px;
       background: transparent;
       text-decoration: none;
       transition: background 0.2s ease, transform 0.2s ease;
       -webkit-tap-highlight-color: transparent;
-      padding: 6px 2px;
     }
 
     .nav-link:hover {
-      background: rgba(255,255,255,0.9);
+      background: rgba(255,255,255,0.92);
       transform: translateY(-1px);
     }
 
     .nav-link img {
-      width: 24px;
-      height: 24px;
+      width: 34px;
+      height: 34px;
       object-fit: contain;
       display: block;
     }
 
-    .nav-link .tooltip {
-      display: none;
-    }
-
     .icon-label {
-      position: static;
-      transform: none;
-      background: rgba(0,0,0,0.82);
+      position: absolute;
+      left: calc(100% + 8px);
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0,0,0,0.88);
       color: #fff;
-      font-size: 0.5rem;
+      font-size: 0.72rem;
       line-height: 1;
-      padding: 4px 6px;
+      padding: 7px 10px;
       border-radius: 999px;
-      opacity: 1;
+      opacity: 0;
       pointer-events: none;
       white-space: nowrap;
-      max-width: 68px;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+
+    .nav-link:hover .icon-label {
+      opacity: 1;
+      transform: translateY(-50%) translateX(2px);
     }
 
     .menu-wrap-top {
@@ -250,7 +246,7 @@
 
     .menu-dropdown {
       position: absolute;
-      top: 54px;
+      top: 58px;
       right: 0;
       min-width: 190px;
       background: rgba(255,255,255,0.98);
@@ -310,11 +306,11 @@
     .morph-nav-icon .butterfly-frame,
     .morph-nav-icon .mushroom-frame {
       position: absolute;
-      top: 9px;
+      top: 50%;
       left: 50%;
-      width: 24px;
-      height: 24px;
-      transform: translateX(-50%);
+      width: 34px;
+      height: 34px;
+      transform: translate(-50%, -50%);
       object-fit: contain;
       display: block;
     }
@@ -332,23 +328,23 @@
     @keyframes iconMorph {
       0% {
         opacity: 0;
-        transform: translateX(-50%) scale(0.88);
+        transform: translate(-50%, -50%) scale(0.88);
       }
       10% {
         opacity: 1;
-        transform: translateX(-50%) scale(1);
+        transform: translate(-50%, -50%) scale(1);
       }
       40% {
         opacity: 1;
-        transform: translateX(-50%) scale(1);
+        transform: translate(-50%, -50%) scale(1);
       }
       50% {
         opacity: 0;
-        transform: translateX(-50%) scale(1.12);
+        transform: translate(-50%, -50%) scale(1.12);
       }
       100% {
         opacity: 0;
-        transform: translateX(-50%) scale(1.12);
+        transform: translate(-50%, -50%) scale(1.12);
       }
     }
 
@@ -374,7 +370,7 @@
       border-radius: var(--radius);
       overflow: hidden;
       background: #fff;
-      box-shadow: var(--shadow);
+      box-shadow: 0 3px 12px rgba(0,0,0,0.08);
       transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
       cursor: pointer;
       position: relative;
@@ -392,7 +388,7 @@
     .card:hover {
       transform: translateY(-4px);
       box-shadow:
-        var(--shadow-hover),
+        0 10px 24px rgba(0,0,0,0.14),
         0 0 0 1px rgba(255,255,255,0.45),
         0 0 10px var(--teal-glow),
         0 0 14px var(--purple-glow);
@@ -423,10 +419,6 @@
       justify-content: center;
       text-align: center;
       padding: 24px 20px;
-    }
-
-    .card.text-block:hover {
-      transform: translateY(-4px);
     }
 
     .text-block-content {
@@ -673,8 +665,8 @@
 
     @media (max-width: 760px) {
       :root {
-        --sidebar-width: 64px;
-        --header-height: 66px;
+        --sidebar-width: 74px;
+        --header-height: 82px;
       }
 
       .topbar {
@@ -682,12 +674,17 @@
         padding-left: 14px;
       }
 
+      .brand-icon {
+        width: 58px;
+        height: 58px;
+      }
+
       .brand-subtitle {
         display: none;
       }
 
       .brand-title {
-        font-size: 1.06rem;
+        font-size: 1.16rem;
       }
 
       .masonry {
@@ -709,9 +706,16 @@
         font-size: 0.8rem;
       }
 
-      .icon-label {
-        font-size: 0.48rem;
-        max-width: 58px;
+      .nav-link {
+        width: 52px;
+        height: 52px;
+      }
+
+      .nav-link img,
+      .morph-nav-icon .butterfly-frame,
+      .morph-nav-icon .mushroom-frame {
+        width: 30px;
+        height: 30px;
       }
 
       .card.text-block {
@@ -764,19 +768,19 @@
   <aside class="sidebar">
     <nav class="nav-icons">
       <a class="nav-link" href="#" data-page-modal="aboutModal">
-        <img class="fairy-fade" src="svg/fairy.svg" alt="About Elayna">
+        <img class="fairy-fade" src="svg/fairy.svg" alt="About">
         <span class="icon-label">About</span>
       </a>
 
-      <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" aria-label="Wings and Wonder">
-        <img class="butterfly-frame" src="svg/butterfly.svg" alt="Wings and Wonder butterfly">
-        <img class="mushroom-frame" src="svg/mushroom.svg" alt="Wings and Wonder mushroom">
-        <span class="icon-label">Wings</span>
+      <a class="nav-link morph-nav-icon" href="#" data-page-modal="newsModal" aria-label="News">
+        <img class="butterfly-frame" src="svg/butterfly.svg" alt="News butterfly">
+        <img class="mushroom-frame" src="svg/mushroom.svg" alt="News mushroom">
+        <span class="icon-label">News</span>
       </a>
 
       <a class="nav-link" href="#" data-page-modal="bloomModal">
-        <img src="svg/thankyou.svg" alt="Help It Bloom">
-        <span class="icon-label">Bloom</span>
+        <img src="svg/thankyou.svg" alt="Donate">
+        <span class="icon-label">Donate</span>
       </a>
 
       <a class="nav-link" href="https://yourshoplink.com" target="_blank" rel="noopener noreferrer">
@@ -785,8 +789,8 @@
       </a>
 
       <a class="nav-link" href="#" data-page-modal="contactModal">
-        <img src="svg/letter.svg" alt="Get In Touch">
-        <span class="icon-label">Reach Out</span>
+        <img src="svg/letter.svg" alt="Contact">
+        <span class="icon-label">Contact</span>
       </a>
     </nav>
   </aside>
@@ -813,10 +817,10 @@
         </button>
 
         <div class="menu-dropdown" id="menuDropdown">
-          <button class="menu-dropdown-link" data-page-modal="aboutModal">About Elayna</button>
-          <button class="menu-dropdown-link" data-page-modal="storeModal">Wings &amp; Wonder</button>
-          <button class="menu-dropdown-link" data-page-modal="bloomModal">Help It Bloom</button>
-          <button class="menu-dropdown-link" data-page-modal="contactModal">Get In Touch</button>
+          <button class="menu-dropdown-link" data-page-modal="aboutModal">About</button>
+          <button class="menu-dropdown-link" data-page-modal="newsModal">News</button>
+          <button class="menu-dropdown-link" data-page-modal="bloomModal">Donate</button>
+          <button class="menu-dropdown-link" data-page-modal="contactModal">Contact</button>
         </div>
       </div>
     </div>
@@ -846,20 +850,20 @@
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>About Elayna</h2>
+        <h2>About</h2>
         <p>Original artwork and handmade jewelry.</p>
         <p>Wings and Wonder is a growing collection of resin work, paintings, sketches, wings, mushrooms, and dreamlike pieces made by hand.</p>
       </div>
     </div>
   </div>
 
-  <div class="page-modal" id="storeModal" aria-hidden="true">
+  <div class="page-modal" id="newsModal" aria-hidden="true">
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Wings &amp; Wonder</h2>
-        <p>Featured pieces, new drops, and future shopping links can live here as your on-site collection space.</p>
-        <p>This can hold curated categories, featured work, and internal shop content.</p>
+        <h2>News</h2>
+        <p>New work, featured drops, fresh experiments, and updates from the studio can live here.</p>
+        <p>This space can highlight what is new inside Wings &amp; Wonder.</p>
       </div>
     </div>
   </div>
@@ -868,7 +872,7 @@
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Help It Bloom</h2>
+        <h2>Donate</h2>
         <p>Support can include socials, tip links, patronage, commissions, or ways to help the studio keep growing.</p>
         <p>This is the place for Patreon, Buy Me a Coffee, and other support links.</p>
       </div>
@@ -879,7 +883,7 @@
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Get In Touch</h2>
+        <h2>Contact</h2>
         <p>For inquiries, custom work, questions, or messages, this is your contact space.</p>
         <p>Add your preferred email, social contact, or commission form here when ready.</p>
       </div>
