@@ -197,7 +197,7 @@
     .nav-link {
       position: relative;
       width: 48px;
-      min-height: 60px;
+      min-height: 62px;
       border-radius: 16px;
       display: flex;
       flex-direction: column;
@@ -252,7 +252,7 @@
       position: absolute;
       top: 54px;
       right: 0;
-      min-width: 170px;
+      min-width: 190px;
       background: rgba(255,255,255,0.98);
       backdrop-filter: blur(12px);
       border: 1px solid rgba(0,0,0,0.08);
@@ -292,6 +292,64 @@
     .menu-dropdown-link:hover {
       background: #f5f5f5;
       transform: translateY(-1px);
+    }
+
+    .fairy-fade {
+      animation: fairyFade 8s ease-in-out infinite;
+    }
+
+    @keyframes fairyFade {
+      0%, 100% { opacity: 0.45; transform: scale(0.96); }
+      50% { opacity: 1; transform: scale(1); }
+    }
+
+    .morph-nav-icon {
+      position: relative;
+    }
+
+    .morph-nav-icon .butterfly-frame,
+    .morph-nav-icon .mushroom-frame {
+      position: absolute;
+      top: 9px;
+      left: 50%;
+      width: 24px;
+      height: 24px;
+      transform: translateX(-50%);
+      object-fit: contain;
+      display: block;
+    }
+
+    .morph-nav-icon .butterfly-frame {
+      opacity: 0;
+      animation: iconMorph 8s infinite ease-in-out;
+    }
+
+    .morph-nav-icon .mushroom-frame {
+      opacity: 0;
+      animation: iconMorph 8s infinite ease-in-out 4s;
+    }
+
+    @keyframes iconMorph {
+      0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.88);
+      }
+      10% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+      40% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1);
+      }
+      50% {
+        opacity: 0;
+        transform: translateX(-50%) scale(1.12);
+      }
+      100% {
+        opacity: 0;
+        transform: translateX(-50%) scale(1.12);
+      }
     }
 
     .main {
@@ -705,44 +763,30 @@
 
   <aside class="sidebar">
     <nav class="nav-icons">
-      <a class="nav-link" href="#" data-name="Butterfly">
-        <img src="svg/butterfly.svg" alt="Butterfly">
-        <span class="icon-label">Butterfly</span>
+      <a class="nav-link" href="#" data-page-modal="aboutModal">
+        <img class="fairy-fade" src="svg/fairy.svg" alt="About Elayna">
+        <span class="icon-label">About</span>
       </a>
 
-      <a class="nav-link" href="#" data-name="Fairy">
-        <img src="svg/fairy.svg" alt="Fairy">
-        <span class="icon-label">Fairy</span>
+      <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" aria-label="Wings and Wonder">
+        <img class="butterfly-frame" src="svg/butterfly.svg" alt="Wings and Wonder butterfly">
+        <img class="mushroom-frame" src="svg/mushroom.svg" alt="Wings and Wonder mushroom">
+        <span class="icon-label">Wings</span>
       </a>
 
-      <a class="nav-link" href="#" data-name="Friends">
-        <img src="svg/friends.svg" alt="Friends">
-        <span class="icon-label">Friends</span>
+      <a class="nav-link" href="#" data-page-modal="bloomModal">
+        <img src="svg/thankyou.svg" alt="Help It Bloom">
+        <span class="icon-label">Bloom</span>
       </a>
 
-      <a class="nav-link" href="#" data-name="Info">
-        <img src="svg/info.svg" alt="Info">
-        <span class="icon-label">Info</span>
-      </a>
-
-      <a class="nav-link" href="#" data-name="Mushroom">
-        <img src="svg/mushroom.svg" alt="Mushroom">
-        <span class="icon-label">Mushroom</span>
-      </a>
-
-      <a class="nav-link" href="#" data-name="Product">
-        <img src="svg/product.svg" alt="Product">
-        <span class="icon-label">Product</span>
-      </a>
-
-      <a class="nav-link" href="#" data-name="Share">
-        <img src="svg/share.svg" alt="Share">
-        <span class="icon-label">Share</span>
-      </a>
-
-      <a class="nav-link" href="#" data-name="Shop">
+      <a class="nav-link" href="https://yourshoplink.com" target="_blank" rel="noopener noreferrer">
         <img src="svg/shop.svg" alt="Shop">
         <span class="icon-label">Shop</span>
+      </a>
+
+      <a class="nav-link" href="#" data-page-modal="contactModal">
+        <img src="svg/letter.svg" alt="Get In Touch">
+        <span class="icon-label">Reach Out</span>
       </a>
     </nav>
   </aside>
@@ -769,10 +813,10 @@
         </button>
 
         <div class="menu-dropdown" id="menuDropdown">
-          <button class="menu-dropdown-link" data-page-modal="welcomeModal">Welcome</button>
-          <button class="menu-dropdown-link" data-page-modal="storeModal">Store</button>
-          <button class="menu-dropdown-link" data-page-modal="supportModal">Support</button>
-          <button class="menu-dropdown-link" data-page-modal="contactModal">Contact</button>
+          <button class="menu-dropdown-link" data-page-modal="aboutModal">About Elayna</button>
+          <button class="menu-dropdown-link" data-page-modal="storeModal">Wings &amp; Wonder</button>
+          <button class="menu-dropdown-link" data-page-modal="bloomModal">Help It Bloom</button>
+          <button class="menu-dropdown-link" data-page-modal="contactModal">Get In Touch</button>
         </div>
       </div>
     </div>
@@ -798,11 +842,11 @@
     </div>
   </div>
 
-  <div class="page-modal" id="welcomeModal" aria-hidden="true">
+  <div class="page-modal" id="aboutModal" aria-hidden="true">
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Welcome</h2>
+        <h2>About Elayna</h2>
         <p>Original artwork and handmade jewelry.</p>
         <p>Wings and Wonder is a growing collection of resin work, paintings, sketches, wings, mushrooms, and dreamlike pieces made by hand.</p>
       </div>
@@ -813,20 +857,20 @@
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Store</h2>
-        <p>Featured pieces, new drops, and future shopping links will live here.</p>
-        <p>You can later swap this text for a shop embed, Etsy link, or curated product categories.</p>
+        <h2>Wings &amp; Wonder</h2>
+        <p>Featured pieces, new drops, and future shopping links can live here as your on-site collection space.</p>
+        <p>This can hold curated categories, featured work, and internal shop content.</p>
       </div>
     </div>
   </div>
 
-  <div class="page-modal" id="supportModal" aria-hidden="true">
+  <div class="page-modal" id="bloomModal" aria-hidden="true">
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Support</h2>
-        <p>Support can include commissions, custom requests, gift inquiries, or ways to help this work continue growing.</p>
-        <p>You can also use this space for FAQ or shipping notes later.</p>
+        <h2>Help It Bloom</h2>
+        <p>Support can include socials, tip links, patronage, commissions, or ways to help the studio keep growing.</p>
+        <p>This is the place for Patreon, Buy Me a Coffee, and other support links.</p>
       </div>
     </div>
   </div>
@@ -835,9 +879,9 @@
     <div class="page-modal-shell">
       <button class="page-modal-close" data-close-page-modal>&times;</button>
       <div class="page-modal-content">
-        <h2>Contact</h2>
-        <p>For now, this can be your contact landing space.</p>
-        <p>Add your preferred email, social link, commission form, or inquiry details here when ready.</p>
+        <h2>Get In Touch</h2>
+        <p>For inquiries, custom work, questions, or messages, this is your contact space.</p>
+        <p>Add your preferred email, social contact, or commission form here when ready.</p>
       </div>
     </div>
   </div>
@@ -968,17 +1012,6 @@
       }
     }
 
-    function buildSearchText(item) {
-      return [
-        item.filename || "",
-        item.description || "",
-        item.category || "",
-        item.priority || "",
-        item.type || "",
-        prettyName(item.filename || "")
-      ].join(" ").toLowerCase();
-    }
-
     function getDisplayTitle(item) {
       if ((item.type || "").toLowerCase() === "text") {
         return item.filename && item.filename.trim()
@@ -1085,13 +1118,6 @@
           : "Scroll for more items…";
     }
 
-    function resetGallery(newList) {
-      filteredItems = shuffleWithPriority(newList);
-      renderedCount = 0;
-      gallery.innerHTML = "";
-      renderNextBatch();
-    }
-
     function handleScrollLoad() {
       const scrollBottom = window.innerHeight + window.scrollY;
       const threshold = document.body.offsetHeight - 900;
@@ -1143,9 +1169,16 @@
     });
 
     pageModalLinks.forEach(link => {
-      link.addEventListener("click", () => {
-        closeMenuDropdown();
-        openPageModal(link.dataset.pageModal);
+      link.addEventListener("click", (e) => {
+        const targetHref = link.getAttribute("href");
+        if (targetHref === "#") {
+          e.preventDefault();
+        }
+
+        if (link.dataset.pageModal) {
+          closeMenuDropdown();
+          openPageModal(link.dataset.pageModal);
+        }
       });
     });
 
@@ -1181,34 +1214,10 @@
         modal.classList.remove("open");
         modal.setAttribute("aria-hidden", "true");
         modalImg.src = "";
-
-        document.querySelectorAll(".nav-link.show-label").forEach(el => {
-          el.classList.remove("show-label");
-        });
       }
-    });
-
-    document.querySelectorAll(".nav-link").forEach(link => {
-      link.addEventListener("click", (e) => {
-        if (link.getAttribute("href") === "#") {
-          e.preventDefault();
-        }
-
-        document.querySelectorAll(".nav-link.show-label").forEach(el => {
-          if (el !== link) el.classList.remove("show-label");
-        });
-
-        link.classList.toggle("show-label");
-      });
     });
 
     document.addEventListener("click", (e) => {
-      if (!e.target.closest(".nav-link")) {
-        document.querySelectorAll(".nav-link.show-label").forEach(el => {
-          el.classList.remove("show-label");
-        });
-      }
-
       if (!e.target.closest(".menu-wrap-top")) {
         closeMenuDropdown();
       }
