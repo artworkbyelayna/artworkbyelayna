@@ -25,10 +25,18 @@
       --radius: 22px;
       --shadow: 0 3px 12px rgba(0,0,0,0.08);
       --shadow-hover: 0 10px 24px rgba(0,0,0,0.14);
-      --teal-border: rgba(42, 211, 201, 0.7);
-      --purple-border: rgba(181, 124, 255, 0.7);
-      --teal-glow: rgba(42, 211, 201, 0.18);
-      --purple-glow: rgba(181, 124, 255, 0.18);
+      --teal-border: rgba(42, 211, 201, 0.82);
+      --purple-border: rgba(181, 124, 255, 0.82);
+      --teal-glow: rgba(42, 211, 201, 0.22);
+      --purple-glow: rgba(181, 124, 255, 0.22);
+      --icon-overlay:
+        linear-gradient(135deg,
+          rgba(42, 211, 201, 0.20) 0%,
+          rgba(181, 124, 255, 0.18) 100%);
+      --icon-overlay-strong:
+        linear-gradient(135deg,
+          rgba(42, 211, 201, 0.34) 0%,
+          rgba(181, 124, 255, 0.30) 100%);
     }
 
     .topbar {
@@ -103,7 +111,7 @@
     }
 
     .brand-title {
-      font-size: 1.56rem;
+      font-size: 1.3rem;
       font-weight: 700;
       letter-spacing: 0.01em;
       line-height: 1.1;
@@ -113,9 +121,9 @@
       font-size: 0.94rem;
       color: #666;
       margin-top: 6px;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
+      white-space: normal;
+      line-height: 1.35;
+      max-width: 520px;
     }
 
     .top-actions {
@@ -184,13 +192,53 @@
       justify-content: center;
       background: transparent;
       text-decoration: none;
-      transition: background 0.2s ease, transform 0.2s ease;
+      transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
       -webkit-tap-highlight-color: transparent;
+      overflow: hidden;
+      border: 1px solid transparent;
+      box-shadow: 0 0 0 rgba(0,0,0,0);
     }
 
-    .nav-link:hover {
+    .nav-link::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: var(--icon-overlay);
+      opacity: 0;
+      transition: opacity 0.22s ease;
+      pointer-events: none;
+    }
+
+    .nav-link:hover,
+    .nav-link:focus-visible {
       background: rgba(255,255,255,0.92);
       transform: translateY(-1px);
+      border-color: rgba(42, 211, 201, 0.35);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.5),
+        0 0 10px rgba(42, 211, 201, 0.16),
+        0 0 16px rgba(181, 124, 255, 0.14);
+      outline: none;
+    }
+
+    .nav-link:hover::before,
+    .nav-link:focus-visible::before,
+    .nav-link.active::before {
+      opacity: 1;
+    }
+
+    .nav-link.active {
+      background: rgba(255,255,255,0.96);
+      border-color: rgba(181, 124, 255, 0.42);
+      box-shadow:
+        0 0 0 1px rgba(255,255,255,0.55),
+        0 0 12px rgba(42, 211, 201, 0.22),
+        0 0 18px rgba(181, 124, 255, 0.22);
+    }
+
+    .nav-link.active::before {
+      background: var(--icon-overlay-strong);
     }
 
     .nav-link img {
@@ -198,6 +246,19 @@
       height: 34px;
       object-fit: contain;
       display: block;
+      position: relative;
+      z-index: 1;
+    }
+
+    .nav-link.large-fairy {
+      width: 66px;
+      height: 66px;
+      border-radius: 22px;
+    }
+
+    .nav-link.large-fairy img {
+      width: 44px;
+      height: 44px;
     }
 
     .icon-label {
@@ -215,6 +276,7 @@
       pointer-events: none;
       white-space: nowrap;
       transition: opacity 0.18s ease, transform 0.18s ease;
+      z-index: 2;
     }
 
     .nav-link:hover .icon-label {
@@ -347,6 +409,7 @@
       transform: translate(-50%, -50%);
       object-fit: contain;
       display: block;
+      z-index: 1;
     }
 
     .morph-nav-icon .butterfly-frame {
@@ -393,7 +456,7 @@
       transition: transform 0.24s ease, box-shadow 0.24s ease, border-color 0.24s ease;
       cursor: pointer;
       position: relative;
-      border: 2px solid transparent;
+      border: 4px solid transparent;
     }
 
     .card:nth-child(odd) {
@@ -700,12 +763,13 @@
         height: 50px;
       }
 
-      .brand-subtitle {
-        display: none;
+      .brand-title {
+        font-size: 1.05rem;
       }
 
-      .brand-title {
-        font-size: 1.16rem;
+      .brand-subtitle {
+        font-size: 0.84rem;
+        max-width: 240px;
       }
 
       .masonry {
@@ -720,6 +784,7 @@
       .card {
         margin-bottom: 12px;
         border-radius: 18px;
+        border-width: 4px;
       }
 
       .card .caption {
@@ -730,6 +795,16 @@
       .nav-link {
         width: 52px;
         height: 52px;
+      }
+
+      .nav-link.large-fairy {
+        width: 58px;
+        height: 58px;
+      }
+
+      .nav-link.large-fairy img {
+        width: 38px;
+        height: 38px;
       }
 
       .nav-link img,
@@ -781,6 +856,10 @@
         max-width: 100%;
         border-radius: 18px;
       }
+
+      .brand-subtitle {
+        max-width: 190px;
+      }
     }
   </style>
 </head>
@@ -788,28 +867,28 @@
 
   <aside class="sidebar">
     <nav class="nav-icons">
-      <a class="nav-link" href="#" data-page-modal="aboutModal">
+      <a class="nav-link large-fairy" href="#" data-page-modal="aboutModal" data-nav-group="about">
         <img class="fairy-fade" src="svg/fairy.svg" alt="About">
         <span class="icon-label">About</span>
       </a>
 
-      <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" aria-label="Store">
+      <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
         <img class="butterfly-frame" src="svg/butterfly.svg" alt="Store butterfly">
         <img class="mushroom-frame" src="svg/mushroom.svg" alt="Store mushroom">
         <span class="icon-label">Store</span>
       </a>
 
-      <a class="nav-link" href="#" data-page-modal="supportModal">
+      <a class="nav-link" href="#" data-page-modal="supportModal" data-nav-group="support">
         <img src="svg/thankyou.svg" alt="Support">
         <span class="icon-label">Support</span>
       </a>
 
-      <a class="nav-link" href="https://yourshoplink.com" target="_blank" rel="noopener noreferrer">
+      <a class="nav-link" href="https://yourshoplink.com" target="_blank" rel="noopener noreferrer" data-nav-group="shop">
         <img src="svg/shop.svg" alt="Shop">
         <span class="icon-label">Shop</span>
       </a>
 
-      <a class="nav-link" href="#" data-page-modal="contactModal">
+      <a class="nav-link" href="#" data-page-modal="contactModal" data-nav-group="contact">
         <img src="svg/letter.svg" alt="Contact">
         <span class="icon-label">Contact</span>
       </a>
@@ -829,8 +908,8 @@
       </div>
 
       <div class="brand-text">
-        <div class="brand-title">Artwork by Elayna</div>
-        <div class="brand-subtitle">Mosaic collection • resin • fantasy • jewelry • visual art</div>
+        <div class="brand-title">Elayna.Studio</div>
+        <div class="brand-subtitle">Original Artwork Inspired By Nature, Light, and Imagination</div>
       </div>
     </div>
 
@@ -934,6 +1013,7 @@
     const pageModals = document.querySelectorAll(".page-modal");
     const pageModalLinks = document.querySelectorAll("[data-page-modal]");
     const pageModalCloseButtons = document.querySelectorAll("[data-close-page-modal]");
+    const sideNavLinks = document.querySelectorAll(".sidebar .nav-link");
 
     const BATCH_SIZE = 12;
 
@@ -1161,11 +1241,29 @@
       menuToggle.setAttribute("aria-expanded", "false");
     }
 
+    function clearActiveNav() {
+      sideNavLinks.forEach(link => link.classList.remove("active"));
+    }
+
+    function setActiveNav(groupName) {
+      clearActiveNav();
+      if (!groupName) return;
+      const match = document.querySelector(`.sidebar .nav-link[data-nav-group="${groupName}"]`);
+      if (match) match.classList.add("active");
+    }
+
     function openPageModal(id) {
       const modalEl = document.getElementById(id);
       if (!modalEl) return;
+
+      closePageModals();
       modalEl.classList.add("open");
       modalEl.setAttribute("aria-hidden", "false");
+
+      if (id === "aboutModal") setActiveNav("about");
+      if (id === "storeModal") setActiveNav("store");
+      if (id === "supportModal") setActiveNav("support");
+      if (id === "contactModal") setActiveNav("contact");
     }
 
     function closePageModals() {
@@ -1173,6 +1271,7 @@
         modalEl.classList.remove("open");
         modalEl.setAttribute("aria-hidden", "true");
       });
+      clearActiveNav();
     }
 
     function triggerSparkles(count = 24) {
@@ -1210,6 +1309,15 @@
           openPageModal(link.dataset.pageModal);
         }
       });
+    });
+
+    sideNavLinks.forEach(link => {
+      if (!link.dataset.pageModal) {
+        link.addEventListener("click", () => {
+          const group = link.dataset.navGroup;
+          if (group) setActiveNav(group);
+        });
+      }
     });
 
     pageModalCloseButtons.forEach(btn => {
