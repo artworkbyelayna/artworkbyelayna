@@ -422,7 +422,8 @@
         }
 
             .morph-nav-icon .butterfly-frame,
-            .morph-nav-icon .mushroom-frame {
+            .morph-nav-icon .mushroom-frame,
+            .morph-nav-icon .shop-frame {
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -436,12 +437,17 @@
 
             .morph-nav-icon .butterfly-frame {
                 opacity: 0;
-                animation: iconMorph 8s infinite ease-in-out;
+                animation: iconMorph 9s infinite ease-in-out;
             }
 
             .morph-nav-icon .mushroom-frame {
                 opacity: 0;
-                animation: iconMorph 8s infinite ease-in-out 4s;
+                animation: iconMorph 9s infinite ease-in-out 3s;
+            }
+
+            .morph-nav-icon .shop-frame {
+                opacity: 0;
+                animation: iconMorph 9s infinite ease-in-out 6s;
             }
 
         @keyframes iconMorph {
@@ -450,17 +456,17 @@
                 transform: translate(-50%, -50%) scale(0.88);
             }
 
-            10% {
+            8% {
                 opacity: 1;
                 transform: translate(-50%, -50%) scale(1);
             }
 
-            40% {
+            25% {
                 opacity: 1;
                 transform: translate(-50%, -50%) scale(1);
             }
 
-            50% {
+            33.333% {
                 opacity: 0;
                 transform: translate(-50%, -50%) scale(1.12);
             }
@@ -722,6 +728,39 @@
                 font-size: 0.95rem;
             }
 
+        .contact-form {
+            display: grid;
+            gap: 10px;
+            width: 100%;
+        }
+
+            .contact-form input,
+            .contact-form textarea {
+                width: 100%;
+                border: 1px solid rgba(0,0,0,0.14);
+                border-radius: 14px;
+                padding: 10px 12px;
+                font: inherit;
+                background: rgba(255,255,255,0.9);
+                color: #222;
+            }
+
+            .contact-form textarea {
+                resize: vertical;
+            }
+
+            .contact-form button {
+                border: none;
+                border-radius: 999px;
+                padding: 11px 14px;
+                font: inherit;
+                font-weight: 700;
+                cursor: pointer;
+                color: #111;
+                background: linear-gradient(135deg, rgba(42,211,201,0.75), rgba(181,124,255,0.68));
+                box-shadow: 0 6px 14px rgba(0,0,0,0.10);
+            }
+
         .page-modal-close {
             position: absolute;
             top: 22px;
@@ -866,7 +905,8 @@
 
                 .nav-link img,
                 .morph-nav-icon .butterfly-frame,
-                .morph-nav-icon .mushroom-frame {
+                .morph-nav-icon .mushroom-frame,
+                .morph-nav-icon .shop-frame {
                     width: 30px;
                     height: 30px;
                 }
@@ -936,17 +976,13 @@
             <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
                 <img class="butterfly-frame" src="svg/butterfly.svg" alt="Store butterfly">
                 <img class="mushroom-frame" src="svg/mushroom.svg" alt="Store mushroom">
+                <img class="shop-frame" src="svg/shop.svg" alt="Store shop">
                 <span class="icon-label">Store</span>
             </a>
 
             <a class="nav-link" href="#" data-page-modal="supportModal" data-nav-group="support">
                 <img src="svg/thankyou.svg" alt="Support">
                 <span class="icon-label">Support</span>
-            </a>
-
-            <a class="nav-link" href="https://yourshoplink.com" target="_blank" rel="noopener noreferrer" data-nav-group="shop">
-                <img src="svg/shop.svg" alt="Shop">
-                <span class="icon-label">Shop</span>
             </a>
 
             <a class="nav-link" href="#" data-page-modal="contactModal" data-nav-group="contact">
@@ -1013,8 +1049,7 @@
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
                 <h2>About</h2>
-                <p>Original artwork and handmade jewelry.</p>
-                <p>Wings and Wonder is a growing collection of resin work, paintings, sketches, wings, mushrooms, and dreamlike pieces made by hand.</p>
+                <p>Elayna MacMaster creates a wide variety of works with a wide range of mediums; from acrylic painting, cosplay design to clay sculpture and resin jewelry.</p>
             </div>
         </div>
     </div>
@@ -1023,9 +1058,8 @@
         <div class="page-modal-shell">
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
-                <h2>Store</h2>
-                <p>Featured pieces, new drops, and future shopping links can live here as your on-site collection space.</p>
-                <p>This can hold curated categories, featured work, and internal shop content.</p>
+                <h2>Site Store</h2>
+                <p>Etsy Store.</p>
             </div>
         </div>
     </div>
@@ -1035,8 +1069,7 @@
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
                 <h2>Support</h2>
-                <p>Support can include socials, tip links, patronage, commissions, or ways to help the studio keep growing.</p>
-                <p>This is the place for Patreon, Buy Me a Coffee, and other support links.</p>
+                <p>Support the studio by sharing the work, visiting the store, following future social links, or reaching out about commissions and custom pieces.</p>
             </div>
         </div>
     </div>
@@ -1046,8 +1079,12 @@
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
                 <h2>Contact</h2>
-                <p>For inquiries, custom work, questions, or messages, this is your contact space.</p>
-                <p>Add your preferred email, social contact, or commission form here when ready.</p>
+                <form class="contact-form" action="mailto:elaynakmacmaster@gmail.com" method="post" enctype="text/plain">
+                    <input type="text" name="name" placeholder="Your name" required>
+                    <input type="email" name="email" placeholder="Your email" required>
+                    <textarea name="message" placeholder="Your message" rows="4" required></textarea>
+                    <button type="submit">Send Email</button>
+                </form>
             </div>
         </div>
     </div>
