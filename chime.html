@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wind Chime Composer</title>
+  <style>
+    :root {
+      --bg0: #070816;
+      --bg1: #14102a;
+      --panel: rgba(18, 20, 43, 0.72);
+      --panel-strong: rgba(13, 15, 35, 0.92);
+      --text: #f3f0ff;
+      --muted: #b9b2d8;
+      --cyan: #78f2ff;
+      --violet: #b48cff;
+      --gold: #ffe49a;
+      --pink: #ff80cb;
+      --green: #9dffcf;
+      --danger: #ff8a8a;
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.42);
+      --radius: 22px;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(125, 92, 255, 0.34), transparent 28%),
+        radial-gradient(circle at 85% 18%, rgba(78, 222, 255, 0.18), transparent 26%),
+        radial-gradient(circle at 40% 92%, rgba(255, 119, 204, 0.16), transparent 34%),
+        linear-gradient(135deg, var(--bg0), var(--bg1) 58%, #090a16);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+      background-size: 80px 80px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent 80%);
+      pointer-events: none;
+    }
+
+    .wind-particles {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      width: 120px;
+      height: 1px;
+      border-radius: 99px;
+      background: linear-gradient(90deg, transparent, rgba(185, 242, 255, 0.45), transparent);
+      animation: drift linear infinite;
+      opacity: 0.35;
+    }
+
+    @keyframes drift {
+      from { transform: translateX(-160px) translateY(0) rotate(var(--rot)); }
+      to { transform: translateX(calc(100vw + 220px)) translateY(var(--drop)) rotate(var(--rot)); }
+    }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      width: min(1480px, calc(100% - 28px));
+      margin: 0 auto;
+      padding: 28px 0 48px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 20px;
+      margin-bottom: 22px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: clamp(2.15rem, 5vw, 5rem);
+      line-height: 0.95;
+      letter-spacing: -0.08em;
+      text-shadow: 0 0 24px rgba(120, 242, 255, 0.28);
+    }
+
+    .title-block p {
+      margin: 12px 0 0;
+      max-width: 780px;
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.55;
+    }
+
+    .status-pill {
+      white-space: nowrap;
+      border: 1px solid rgba(255,255,255,0.15);
+      background: rgba(255,255,255,0.07);
+      border-radius: 999px;
+      padding: 10px 14px;
+      color: var(--green);
+      box-shadow: 0 0 24px rgba(157, 255, 207, 0.08);
+      font-size: 0.9rem;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(350px, 0.7fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .stage, .controls, .chime-editor, .panel {
+      border: 1px solid rgba(255,255,255,0.13);
+      background: var(--panel);
+      backdrop-filter: blur(20px);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .stage {
+      min-height: 560px;
+      position: relative;
+      overflow: hidden;
+      padding: 24px;
+    }
+
+    .stage::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255,228,154,0.16), transparent 20%),
+        linear-gradient(to bottom, rgba(255,255,255,0.05), transparent 36%);
+      pointer-events: none;
+    }
+
+    .rack {
+      position: relative;
+      height: 430px;
+      margin-top: 30px;
+      border-top: 8px solid rgba(255,255,255,0.14);
+      border-radius: 14px 14px 0 0;
+      display: grid;
+      grid-template-columns: repeat(var(--chime-count), 1fr);
+      gap: 4px;
+      padding: 0 12px;
+    }
+
+    .chime-wrap {
+      position: relative;
+      display: flex;
+      justify-content: center;
+      transform-origin: top center;
+      transition: filter 0.2s ease;
+      animation: idleSway 5.5s ease-in-out infinite;
+      animation-delay: calc(var(--i) * -0.47s);
+    }
+
+    @keyframes idleSway {
+      0%, 100% { transform: rotate(-1.5deg); }
+      50% { transform: rotate(1.5deg); }
+    }
+
+    .chime-wrap.hit {
+      animation: hitSway 0.9s ease-out, idleSway 5.5s ease-in-out 0.9s infinite;
+      filter: drop-shadow(0 0 18px rgba(120, 242, 255, 0.76));
+    }
+
+    @keyframes hitSway {
+      0% { transform: rotate(calc(var(--hit-angle, 10deg) * -1)); }
+      45% { transform: rotate(var(--hit-angle, 10deg)); }
+      100% { transform: rotate(0deg); }
+    }
+
+    .string {
+      position: absolute;
+      top: 0;
+      height: var(--string-height);
+      width: 1px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.55), rgba(255,255,255,0.08));
+    }
+
+    .chime {
+      position: absolute;
+      top: var(--string-height);
+      width: clamp(18px, 3vw, 35px);
+      height: var(--chime-height);
+      border-radius: 999px 999px 10px 10px;
+      background:
+        linear-gradient(90deg, rgba(255,255,255,0.18), transparent 24%, rgba(255,255,255,0.35) 38%, rgba(255,255,255,0.08) 55%, rgba(0,0,0,0.18)),
+        linear-gradient(to bottom, rgba(170, 252, 255, 0.72), rgba(180, 140, 255, 0.46) 55%, rgba(255, 228, 154, 0.45));
+      border: 1px solid rgba(255,255,255,0.28);
+      box-shadow: inset 0 0 18px rgba(255,255,255,0.1), 0 18px 36px rgba(0,0,0,0.25);
+    }
+
+    .chime::after {
+      content: attr(data-note);
+      position: absolute;
+      left: 50%;
+      bottom: -30px;
+      transform: translateX(-50%);
+      font-size: 0.74rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.22);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 999px;
+      padding: 3px 7px;
+    }
+
+    .clapper {
+      position: absolute;
+      top: calc(var(--string-height) + var(--chime-height) - 8px);
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--gold);
+      box-shadow: 0 0 14px rgba(255, 228, 154, 0.55);
+    }
+
+    .stage-footer {
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      bottom: 22px;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .wind-meter {
+      height: 18px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .wind-fill {
+      height: 100%;
+      width: 20%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--violet), var(--pink));
+      box-shadow: 0 0 20px rgba(120, 242, 255, 0.55);
+      transition: width 0.22s ease;
+    }
+
+    .controls, .chime-editor, .panel {
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    h2, h3 {
+      margin: 0 0 12px;
+      letter-spacing: -0.03em;
+    }
+
+    h2 { font-size: 1.35rem; }
+    h3 { font-size: 1.05rem; color: var(--gold); }
+
+    .grid { display: grid; gap: 12px; }
+    .two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--muted);
+      font-size: 0.84rem;
+    }
+
+    input, select, button {
+      font: inherit;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      border: 1px solid rgba(255,255,255,0.14);
+      color: var(--text);
+      background: rgba(0,0,0,0.28);
+      border-radius: 13px;
+      padding: 10px 11px;
+      outline: none;
+    }
+
+    input[type="range"] {
+      accent-color: var(--cyan);
+      width: 100%;
+    }
+
+    .button-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid rgba(255,255,255,0.16);
+      color: var(--text);
+      background: rgba(255,255,255,0.08);
+      border-radius: 999px;
+      padding: 10px 13px;
+      transition: transform 0.16s ease, border-color 0.16s ease, background 0.16s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+      border-color: rgba(120, 242, 255, 0.42);
+      background: rgba(120, 242, 255, 0.11);
+    }
+
+    button.primary {
+      background: linear-gradient(135deg, rgba(120, 242, 255, 0.28), rgba(180, 140, 255, 0.28));
+      border-color: rgba(120, 242, 255, 0.42);
+    }
+
+    button.active {
+      background: rgba(157, 255, 207, 0.18);
+      border-color: rgba(157, 255, 207, 0.5);
+      color: var(--green);
+    }
+
+    .preset-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 9px;
+    }
+
+    .small-note {
+      color: var(--muted);
+      font-size: 0.83rem;
+      line-height: 1.45;
+      margin: 10px 0 0;
+    }
+
+    .editor-list {
+      display: grid;
+      gap: 10px;
+      max-height: 430px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .chime-card {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 10px;
+      align-items: center;
+      padding: 10px;
+      border-radius: 16px;
+      background: rgba(255,255,255,0.055);
+      border: 1px solid rgba(255,255,255,0.09);
+    }
+
+    .chime-num {
+      width: 32px;
+      height: 32px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(120, 242, 255, 0.12);
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: 1fr 72px;
+      gap: 8px;
+    }
+
+    .readout {
+      min-height: 74px;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 16px;
+      padding: 12px;
+      background: rgba(0,0,0,0.2);
+      color: var(--muted);
+      line-height: 1.45;
+      font-size: 0.92rem;
+    }
+
+    .toggle-line {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 0;
+    }
+
+    .toggle-line span { color: var(--muted); font-size: 0.9rem; }
+
+    .switch {
+      width: 54px;
+      height: 30px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.1);
+      padding: 3px;
+      border: 1px solid rgba(255,255,255,0.16);
+      cursor: pointer;
+    }
+
+    .switch i {
+      display: block;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: white;
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .switch.on { background: rgba(120, 242, 255, 0.2); }
+    .switch.on i { transform: translateX(24px); background: var(--cyan); }
+
+    @media (max-width: 980px) {
+      header { align-items: start; flex-direction: column; }
+      .layout { grid-template-columns: 1fr; }
+      .stage { min-height: 520px; }
+      .rack { height: 390px; }
+    }
+
+    @media (max-width: 620px) {
+      .two, .three, .preset-grid { grid-template-columns: 1fr; }
+      .stage { padding: 16px; }
+      .stage-footer { left: 16px; right: 16px; grid-template-columns: 1fr; }
+      .chime-card { grid-template-columns: 1fr; }
+      .chime-num { width: 100%; border-radius: 12px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wind-particles" id="particles"></div>
+  <main class="app">
+    <header>
+      <div class="title-block">
+        <h1>Wind Chime Composer</h1>
+        <p>Program the notes, tone, and shimmer of each chime. Let a manual breeze play your chords, or pull real wind data from a chosen location and turn weather into music.</p>
+      </div>
+      <div class="status-pill" id="audioStatus">Audio sleeping — press Start</div>
+    </header>
+
+    <section class="layout">
+      <div>
+        <section class="stage">
+          <div class="rack" id="rack"></div>
+          <div class="stage-footer">
+            <div>
+              <div class="wind-meter"><div class="wind-fill" id="windFill"></div></div>
+              <p class="small-note" id="windReadout">Manual breeze: 20% strength, direction 90°.</p>
+            </div>
+            <button class="primary" id="composeChordBtn">Compose Chord</button>
+          </div>
+        </section>
+
+        <section class="chime-editor">
+          <h2>Chime Tuning</h2>
+          <div class="editor-list" id="editorList"></div>
+        </section>
+      </div>
+
+      <aside>
+        <section class="controls">
+          <h2>Main Controls</h2>
+          <div class="button-row">
+            <button class="primary" id="startBtn">Start Audio</button>
+            <button id="stopBtn">Stop Breeze</button>
+            <button id="gustBtn">Gust</button>
+            <button id="randomizeBtn">Randomize</button>
+          </div>
+          <div class="grid two" style="margin-top:14px;">
+            <label>Master Volume <input id="masterVolume" type="range" min="0" max="1" step="0.01" value="0.65"></label>
+            <label>Reverb <input id="reverb" type="range" min="0" max="1" step="0.01" value="0.35"></label>
+            <label>Global Decay <input id="globalDecay" type="range" min="0.4" max="8" step="0.1" value="3.2"></label>
+            <label>Brightness <input id="brightness" type="range" min="0" max="1" step="0.01" value="0.58"></label>
+            <label>Random Timing <input id="randomTiming" type="range" min="0" max="1" step="0.01" value="0.55"></label>
+            <label>Chime Count
+              <select id="chimeCount">
+                <option>6</option><option>7</option><option selected>8</option><option>9</option><option>10</option><option>11</option><option>12</option>
+              </select>
+            </label>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Musical Presets</h2>
+          <div class="preset-grid" id="presetGrid"></div>
+          <p class="small-note">Presets tune the chimes into notes that naturally make pleasing clusters.</p>
+        </section>
+
+        <section class="panel">
+          <h2>Manual Wind</h2>
+          <div class="grid">
+            <label>Wind Strength <input id="windStrength" type="range" min="0" max="100" step="1" value="20"></label>
+            <label>Wind Direction <input id="windDirection" type="range" min="0" max="359" step="1" value="90"></label>
+          </div>
+          <div class="toggle-line">
+            <span>Continuous Breeze</span>
+            <div class="switch" id="breezeToggle"><i></i></div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Real Wind Mode</h2>
+          <div class="grid">
+            <label>City or place name <input id="locationInput" type="text" placeholder="Flagler, Colorado"></label>
+            <div class="button-row">
+              <button id="fetchWindBtn" class="primary">Use Real Wind</button>
+              <button id="manualModeBtn">Manual Mode</button>
+            </div>
+            <div class="readout" id="weatherReadout">Real wind data uses Open-Meteo geocoding and forecast APIs. No key needed.</div>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Save / Load</h2>
+          <div class="button-row">
+            <button id="saveBtn">Save Preset</button>
+            <button id="loadBtn">Load Preset</button>
+            <button id="clearBtn">Clear Save</button>
+          </div>
+        </section>
+      </aside>
+    </section>
+  </main>
+
+  <script>
+    const noteNames = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"];
+    const presets = {
+      "Major Pentatonic": ["C4", "D4", "E4", "G4", "A4", "C5", "D5", "E5", "G5", "A5", "C6", "D6"],
+      "Minor Pentatonic": ["A3", "C4", "D4", "E4", "G4", "A4", "C5", "D5", "E5", "G5", "A5", "C6"],
+      "Dreamy Suspended": ["C4", "D4", "F4", "G4", "A#4", "C5", "D5", "F5", "G5", "A#5", "C6", "D6"],
+      "Lydian Glow": ["C4", "D4", "E4", "F#4", "G4", "A4", "B4", "C5", "D5", "E5", "F#5", "G5"],
+      "Dark Ambient": ["D3", "F3", "G3", "A3", "C4", "D4", "F4", "G4", "A4", "C5", "D5", "F5"],
+      "Custom": []
+    };
+
+    const app = {
+      audio: null,
+      master: null,
+      dry: null,
+      wet: null,
+      convolver: null,
+      breezeTimer: null,
+      weatherTimer: null,
+      mode: "manual",
+      activePreset: "Major Pentatonic",
+      wind: { strength: 20, direction: 90, realSpeed: null, place: null },
+      chimes: []
+    };
+
+    const els = {
+      rack: document.getElementById("rack"),
+      editorList: document.getElementById("editorList"),
+      presetGrid: document.getElementById("presetGrid"),
+      audioStatus: document.getElementById("audioStatus"),
+      windFill: document.getElementById("windFill"),
+      windReadout: document.getElementById("windReadout"),
+      weatherReadout: document.getElementById("weatherReadout"),
+      particles: document.getElementById("particles"),
+      startBtn: document.getElementById("startBtn"),
+      stopBtn: document.getElementById("stopBtn"),
+      gustBtn: document.getElementById("gustBtn"),
+      randomizeBtn: document.getElementById("randomizeBtn"),
+      composeChordBtn: document.getElementById("composeChordBtn"),
+      masterVolume: document.getElementById("masterVolume"),
+      reverb: document.getElementById("reverb"),
+      globalDecay: document.getElementById("globalDecay"),
+      brightness: document.getElementById("brightness"),
+      randomTiming: document.getElementById("randomTiming"),
+      chimeCount: document.getElementById("chimeCount"),
+      windStrength: document.getElementById("windStrength"),
+      windDirection: document.getElementById("windDirection"),
+      breezeToggle: document.getElementById("breezeToggle"),
+      locationInput: document.getElementById("locationInput"),
+      fetchWindBtn: document.getElementById("fetchWindBtn"),
+      manualModeBtn: document.getElementById("manualModeBtn"),
+      saveBtn: document.getElementById("saveBtn"),
+      loadBtn: document.getElementById("loadBtn"),
+      clearBtn: document.getElementById("clearBtn")
+    };
+
+    function initChimes(count = 8) {
+      const notes = presets[app.activePreset] || presets["Major Pentatonic"];
+      app.chimes = Array.from({ length: count }, (_, i) => ({
+        note: notes[i % notes.length] || "C4",
+        volume: 0.72,
+        pan: count === 1 ? 0 : (i / (count - 1)) * 2 - 1,
+        decay: 1,
+        brightness: 0.58
+      }));
+      renderAll();
+    }
+
+    function createParticles() {
+      els.particles.innerHTML = "";
+      for (let i = 0; i < 30; i++) {
+        const p = document.createElement("div");
+        p.className = "particle";
+        p.style.top = Math.random() * 100 + "vh";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.setProperty("--drop", (Math.random() * 130 - 65) + "px");
+        p.style.setProperty("--rot", (Math.random() * 12 - 6) + "deg");
+        p.style.animationDuration = (7 + Math.random() * 14) + "s";
+        p.style.animationDelay = (-Math.random() * 14) + "s";
+        els.particles.appendChild(p);
+      }
+    }
+
+    function renderAll() {
+      renderRack();
+      renderEditor();
+      updateWindReadout();
+    }
+
+    function renderRack() {
+      els.rack.style.setProperty("--chime-count", app.chimes.length);
+      els.rack.innerHTML = "";
+      app.chimes.forEach((chime, i) => {
+        const wrap = document.createElement("div");
+        wrap.className = "chime-wrap";
+        wrap.id = `chime-${i}`;
+        wrap.style.setProperty("--i", i);
+        wrap.style.setProperty("--string-height", `${58 + (i % 4) * 13}px`);
+        wrap.style.setProperty("--chime-height", `${170 + ((i * 31) % 95)}px`);
+        wrap.style.setProperty("--hit-angle", `${7 + Math.random() * 11}deg`);
+        wrap.innerHTML = `<div class="string"></div><div class="chime" data-note="${chime.note}"></div><div class="clapper"></div>`;
+        wrap.addEventListener("click", () => playChime(i, 0.85));
+        els.rack.appendChild(wrap);
+      });
+    }
+
+    function renderEditor() {
+      els.editorList.innerHTML = "";
+      app.chimes.forEach((chime, i) => {
+        const card = document.createElement("div");
+        card.className = "chime-card";
+        card.innerHTML = `
+          <div class="chime-num">${i + 1}</div>
+          <div class="mini-grid">
+            <label>Note
+              <select data-i="${i}" data-field="note">${noteOptions(chime.note)}</select>
+            </label>
+            <label>Vol
+              <input data-i="${i}" data-field="volume" type="range" min="0" max="1" step="0.01" value="${chime.volume}">
+            </label>
+            <label>Pan
+              <input data-i="${i}" data-field="pan" type="range" min="-1" max="1" step="0.01" value="${chime.pan}">
+            </label>
+            <label>Tone
+              <input data-i="${i}" data-field="brightness" type="range" min="0" max="1" step="0.01" value="${chime.brightness}">
+            </label>
+          </div>
+          <button data-test="${i}">Test</button>
+        `;
+        els.editorList.appendChild(card);
+      });
+
+      els.editorList.querySelectorAll("select,input").forEach(input => {
+        input.addEventListener("input", event => {
+          const i = Number(event.target.dataset.i);
+          const field = event.target.dataset.field;
+          app.chimes[i][field] = field === "note" ? event.target.value : Number(event.target.value);
+          if (field === "note") renderRack();
+        });
+      });
+
+      els.editorList.querySelectorAll("button[data-test]").forEach(btn => {
+        btn.addEventListener("click", () => playChime(Number(btn.dataset.test), 0.9));
+      });
+    }
+
+    function noteOptions(selected) {
+      let html = "";
+      for (let octave = 2; octave <= 6; octave++) {
+        noteNames.forEach(n => {
+          const note = `${n}${octave}`;
+          html += `<option value="${note}" ${note === selected ? "selected" : ""}>${note}</option>`;
+        });
+      }
+      return html;
+    }
+
+    function renderPresets() {
+      Object.keys(presets).forEach(name => {
+        const btn = document.createElement("button");
+        btn.textContent = name;
+        if (name === app.activePreset) btn.classList.add("active");
+        btn.addEventListener("click", () => applyPreset(name));
+        els.presetGrid.appendChild(btn);
+      });
+    }
+
+    function applyPreset(name) {
+      app.activePreset = name;
+      if (presets[name].length) {
+        app.chimes.forEach((chime, i) => chime.note = presets[name][i % presets[name].length]);
+      }
+      els.presetGrid.querySelectorAll("button").forEach(btn => btn.classList.toggle("active", btn.textContent === name));
+      renderAll();
+    }
+
+    function ensureAudio() {
+      if (app.audio) return;
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      app.audio = new AudioContext();
+      app.master = app.audio.createGain();
+      app.dry = app.audio.createGain();
+      app.wet = app.audio.createGain();
+      app.convolver = app.audio.createConvolver();
+      app.convolver.buffer = createImpulse(app.audio, 3.4, 2.6);
+      app.dry.connect(app.master);
+      app.wet.connect(app.convolver);
+      app.convolver.connect(app.master);
+      app.master.connect(app.audio.destination);
+      updateAudioControls();
+      els.audioStatus.textContent = "Audio awake — ready for wind";
+    }
+
+    function createImpulse(ctx, duration, decay) {
+      const length = ctx.sampleRate * duration;
+      const impulse = ctx.createBuffer(2, length, ctx.sampleRate);
+      for (let c = 0; c < 2; c++) {
+        const data = impulse.getChannelData(c);
+        for (let i = 0; i < length; i++) {
+          data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay);
+        }
+      }
+      return impulse;
+    }
+
+    function updateAudioControls() {
+      if (!app.audio) return;
+      app.master.gain.value = Number(els.masterVolume.value);
+      app.dry.gain.value = 1 - Number(els.reverb.value) * 0.42;
+      app.wet.gain.value = Number(els.reverb.value) * 0.72;
+    }
+
+    function noteToFreq(note) {
+      const match = note.match(/^([A-G]#?)(\d)$/);
+      const pitch = noteNames.indexOf(match[1]);
+      const octave = Number(match[2]);
+      const midi = (octave + 1) * 12 + pitch;
+      return 440 * Math.pow(2, (midi - 69) / 12);
+    }
+
+    function playChime(index, velocity = 0.7) {
+      ensureAudio();
+      if (app.audio.state === "suspended") app.audio.resume();
+      const chime = app.chimes[index];
+      if (!chime) return;
+
+      const now = app.audio.currentTime;
+      const freq = noteToFreq(chime.note);
+      const decay = Number(els.globalDecay.value) * chime.decay;
+      const bright = (Number(els.brightness.value) + chime.brightness) / 2;
+      const gain = app.audio.createGain();
+      const pan = app.audio.createStereoPanner();
+      const filter = app.audio.createBiquadFilter();
+
+      filter.type = "lowpass";
+      filter.frequency.value = 1300 + bright * 7200;
+      filter.Q.value = 0.6 + bright * 1.4;
+      pan.pan.value = chime.pan;
+
+      gain.gain.setValueAtTime(0.0001, now);
+      gain.gain.exponentialRampToValueAtTime(Math.max(0.0001, velocity * chime.volume * 0.48), now + 0.012);
+      gain.gain.exponentialRampToValueAtTime(0.0001, now + decay);
+
+      const partials = [1, 2.01, 2.72, 3.91, 5.19];
+      partials.forEach((ratio, p) => {
+        const osc = app.audio.createOscillator();
+        const partialGain = app.audio.createGain();
+        osc.type = p === 0 ? "sine" : "triangle";
+        osc.frequency.setValueAtTime(freq * ratio * (1 + (Math.random() - 0.5) * 0.004), now);
+        partialGain.gain.value = (1 / (p + 1.2)) * (p === 0 ? 1 : bright);
+        osc.connect(partialGain).connect(filter);
+        osc.start(now);
+        osc.stop(now + decay + 0.25);
+      });
+
+      filter.connect(gain).connect(pan);
+      pan.connect(app.dry);
+      pan.connect(app.wet);
+
+      const visual = document.getElementById(`chime-${index}`);
+      if (visual) {
+        visual.classList.remove("hit");
+        void visual.offsetWidth;
+        visual.style.setProperty("--hit-angle", `${7 + velocity * 18}deg`);
+        visual.classList.add("hit");
+        setTimeout(() => visual.classList.remove("hit"), 920);
+      }
+    }
+
+    function chooseChimeByWind() {
+      const count = app.chimes.length;
+      const directionBias = app.wind.direction / 359;
+      const center = Math.round(directionBias * (count - 1));
+      const spread = Math.max(1, Math.round(count * (0.15 + app.wind.strength / 180)));
+      let index = center + Math.floor(Math.random() * (spread * 2 + 1)) - spread;
+      index = Math.max(0, Math.min(count - 1, index));
+      if (Math.random() < 0.35) index = Math.floor(Math.random() * count);
+      return index;
+    }
+
+    function gust(cluster = null) {
+      ensureAudio();
+      const strength = app.wind.strength / 100;
+      const hits = cluster ?? Math.round(2 + strength * 8 + Math.random() * 4);
+      const timing = Number(els.randomTiming.value);
+      for (let i = 0; i < hits; i++) {
+        const delay = Math.random() * (180 + timing * 900);
+        setTimeout(() => playChime(chooseChimeByWind(), 0.35 + Math.random() * (0.45 + strength * 0.45)), delay);
+      }
+    }
+
+    function startBreeze() {
+      ensureAudio();
+      stopBreeze(false);
+      els.breezeToggle.classList.add("on");
+      const loop = () => {
+        const strength = app.wind.strength;
+        const interval = Math.max(260, 4100 - strength * 36 + Math.random() * 1200);
+        const chance = Math.min(0.95, 0.18 + strength / 110);
+        if (Math.random() < chance) {
+          if (strength > 58 && Math.random() < 0.38) gust();
+          else playChime(chooseChimeByWind(), 0.25 + Math.random() * (0.25 + strength / 135));
+        }
+        app.breezeTimer = setTimeout(loop, interval);
+      };
+      loop();
+    }
+
+    function stopBreeze(toggleOff = true) {
+      clearTimeout(app.breezeTimer);
+      app.breezeTimer = null;
+      if (toggleOff) els.breezeToggle.classList.remove("on");
+    }
+
+    function updateWindReadout() {
+      const percent = Math.round(app.wind.strength);
+      els.windFill.style.width = `${percent}%`;
+      const detail = app.mode === "weather"
+        ? `Real wind: ${app.wind.realSpeed?.toFixed(1) ?? "?"} km/h from ${Math.round(app.wind.direction)}° near ${app.wind.place || "selected location"}.`
+        : `Manual breeze: ${percent}% strength, direction ${Math.round(app.wind.direction)}°.`;
+      els.windReadout.textContent = detail;
+      document.querySelectorAll(".particle").forEach(p => {
+        p.style.animationDuration = `${Math.max(2.6, 15 - percent / 8)}s`;
+        p.style.opacity = 0.12 + percent / 150;
+      });
+    }
+
+    async function useRealWind() {
+      const place = els.locationInput.value.trim() || "Flagler, Colorado";
+      els.weatherReadout.textContent = `Looking up wind for ${place}...`;
+      try {
+        const geoUrl = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(place)}&count=1&language=en&format=json`;
+        const geo = await fetch(geoUrl).then(r => r.json());
+        if (!geo.results || !geo.results.length) throw new Error("Location not found.");
+        const g = geo.results[0];
+        const weatherUrl = `https://api.open-meteo.com/v1/forecast?latitude=${g.latitude}&longitude=${g.longitude}&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=kmh`;
+        const weather = await fetch(weatherUrl).then(r => r.json());
+        const speed = weather.current.wind_speed_10m;
+        const direction = weather.current.wind_direction_10m;
+        app.mode = "weather";
+        app.wind.realSpeed = speed;
+        app.wind.direction = direction;
+        app.wind.strength = Math.max(3, Math.min(100, speed * 3.1));
+        app.wind.place = `${g.name}${g.admin1 ? ", " + g.admin1 : ""}`;
+        els.windStrength.value = app.wind.strength;
+        els.windDirection.value = app.wind.direction;
+        els.weatherReadout.innerHTML = `<strong>${app.wind.place}</strong><br>Wind speed: ${speed} km/h<br>Direction: ${direction}°<br>The chimes are now being driven by live weather data.`;
+        updateWindReadout();
+        startBreeze();
+      } catch (err) {
+        els.weatherReadout.textContent = `Could not retrieve wind data: ${err.message}. Staying in manual mode.`;
+        app.mode = "manual";
+      }
+    }
+
+    function randomizeTunings() {
+      const pool = presets[app.activePreset]?.length ? presets[app.activePreset] : presets["Major Pentatonic"];
+      app.chimes.forEach(chime => {
+        chime.note = pool[Math.floor(Math.random() * pool.length)];
+        chime.volume = 0.45 + Math.random() * 0.5;
+        chime.brightness = 0.25 + Math.random() * 0.72;
+      });
+      renderAll();
+    }
+
+    function composeChord() {
+      ensureAudio();
+      app.chimes.forEach((_, i) => setTimeout(() => playChime(i, 0.45), i * 95 + Math.random() * 60));
+    }
+
+    function savePreset() {
+      localStorage.setItem("windChimeComposer", JSON.stringify({
+        chimes: app.chimes,
+        activePreset: app.activePreset,
+        controls: {
+          masterVolume: els.masterVolume.value,
+          reverb: els.reverb.value,
+          globalDecay: els.globalDecay.value,
+          brightness: els.brightness.value,
+          randomTiming: els.randomTiming.value
+        }
+      }));
+      els.weatherReadout.textContent = "Preset saved in this browser.";
+    }
+
+    function loadPreset() {
+      const raw = localStorage.getItem("windChimeComposer");
+      if (!raw) return els.weatherReadout.textContent = "No saved preset found yet.";
+      const saved = JSON.parse(raw);
+      app.chimes = saved.chimes || app.chimes;
+      app.activePreset = saved.activePreset || "Custom";
+      Object.entries(saved.controls || {}).forEach(([key, value]) => { if (els[key]) els[key].value = value; });
+      els.chimeCount.value = app.chimes.length;
+      renderAll();
+      updateAudioControls();
+      els.weatherReadout.textContent = "Saved preset loaded.";
+    }
+
+    function bindEvents() {
+      els.startBtn.addEventListener("click", () => { ensureAudio(); app.audio.resume(); els.audioStatus.textContent = "Audio awake — click chimes or start breeze"; });
+      els.stopBtn.addEventListener("click", () => stopBreeze());
+      els.gustBtn.addEventListener("click", () => gust());
+      els.randomizeBtn.addEventListener("click", randomizeTunings);
+      els.composeChordBtn.addEventListener("click", composeChord);
+      [els.masterVolume, els.reverb].forEach(el => el.addEventListener("input", updateAudioControls));
+      [els.globalDecay, els.brightness, els.randomTiming].forEach(el => el.addEventListener("input", () => {}));
+      els.chimeCount.addEventListener("change", () => initChimes(Number(els.chimeCount.value)));
+      els.windStrength.addEventListener("input", e => { app.mode = "manual"; app.wind.strength = Number(e.target.value); updateWindReadout(); });
+      els.windDirection.addEventListener("input", e => { app.mode = "manual"; app.wind.direction = Number(e.target.value); updateWindReadout(); });
+      els.breezeToggle.addEventListener("click", () => app.breezeTimer ? stopBreeze() : startBreeze());
+      els.fetchWindBtn.addEventListener("click", useRealWind);
+      els.manualModeBtn.addEventListener("click", () => { app.mode = "manual"; els.weatherReadout.textContent = "Manual wind mode active."; updateWindReadout(); });
+      els.saveBtn.addEventListener("click", savePreset);
+      els.loadBtn.addEventListener("click", loadPreset);
+      els.clearBtn.addEventListener("click", () => { localStorage.removeItem("windChimeComposer"); els.weatherReadout.textContent = "Saved preset cleared."; });
+    }
+
+    createParticles();
+    renderPresets();
+    initChimes(8);
+    bindEvents();
+  </script>
+</body>
+</html>
