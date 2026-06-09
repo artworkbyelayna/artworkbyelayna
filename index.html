@@ -1291,9 +1291,9 @@
                     <span class="nav-label">About</span>
                 </a>
 
-                <a class="nav-link" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
-                    <span class="nav-icon-wrap"><img src="svg/store.svg" alt=""></span>
-                    <span class="nav-label">Store</span>
+                <a class="nav-link" href="#" data-page-modal="shopModal" data-nav-group="shop" aria-label="shop">
+                    <span class="nav-icon-wrap"><img src="svg/shop.svg" alt=""></span>
+                    <span class="nav-label">shop</span>
                 </a>
 
                 <a class="nav-link" href="#" data-page-modal="supportModal" data-nav-group="support" aria-label="Support">
@@ -1339,12 +1339,12 @@
         </div>
     </div>
 
-    <div class="page-modal" id="storeModal" aria-hidden="true">
+    <div class="page-modal" id="shopModal" aria-hidden="true">
         <div class="page-modal-shell">
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
-                <h2>Site Store</h2>
-                <p>Etsy Store.</p>
+                <h2>Site shop</h2>
+                <p>Etsy shop.</p>
             </div>
         </div>
     </div>
@@ -1354,7 +1354,7 @@
             <button class="page-modal-close" data-close-page-modal>&times;</button>
             <div class="page-modal-content">
                 <h2>Support</h2>
-                <p>Support the studio by sharing the work, visiting the store, following future social links, or reaching out about commissions and custom pieces.</p>
+                <p>Support the studio by sharing the work, visiting the shop, following future social links, or reaching out about commissions and custom pieces.</p>
             </div>
         </div>
     </div>
@@ -1472,7 +1472,7 @@
       loadIndicator.textContent = "Loading image list…";
 
       try {
-        const response = await fetch(IMAGE_LIST_PATH, { cache: "no-store" });
+        const response = await fetch(IMAGE_LIST_PATH, { cache: "no-shop" });
         if (!response.ok) {
           throw new Error(`Could not load ${IMAGE_LIST_PATH}`);
         }
@@ -1642,7 +1642,7 @@
       modalEl.setAttribute("aria-hidden", "false");
 
       if (id === "aboutModal") setActiveNav("about");
-      if (id === "storeModal") setActiveNav("store");
+      if (id === "shopModal") setActiveNav("shop");
       if (id === "supportModal") setActiveNav("support");
       if (id === "contactModal") setActiveNav("contact");
     }
