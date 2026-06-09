@@ -45,7 +45,7 @@
             border-bottom: 1px solid rgba(0,0,0,0.08);
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 16px;
             padding: 14px 24px 14px 22px;
             margin-left: var(--sidebar-width);
@@ -54,8 +54,17 @@
         .brand {
             display: flex;
             align-items: center;
-            gap: 18px;
+            justify-content: center;
             min-width: 0;
+            width: 100%;
+        }
+
+        .brand-header-image {
+            display: block;
+            width: min(560px, 86vw);
+            max-height: 76px;
+            height: auto;
+            object-fit: contain;
         }
 
         .brand-icon {
@@ -185,7 +194,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 16px 10px 16px;
+            padding: 22px 10px 16px;
             z-index: 1100;
         }
 
@@ -360,6 +369,51 @@
                 background: #f5f5f5;
                 transform: translateY(-1px);
             }
+
+
+        .about-morph-icon img {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            display: block;
+            z-index: 1;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));
+        }
+
+        .about-morph-icon .about-butterfly-frame {
+            animation: aboutIconButterflyFade 7s ease-in-out infinite;
+        }
+
+        .about-morph-icon .about-fairy-frame {
+            animation: aboutIconFairyFade 7s ease-in-out infinite;
+        }
+
+        @keyframes aboutIconButterflyFade {
+            0%, 38%, 100% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            50%, 88% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(1.08);
+            }
+        }
+
+        @keyframes aboutIconFairyFade {
+            0%, 38%, 100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.92);
+            }
+
+            50%, 88% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
 
         .fairy-fade {
             animation: fairyFade 8s ease-in-out infinite;
@@ -838,6 +892,11 @@
                 height: 58px;
             }
 
+            .brand-header-image {
+                max-height: 58px;
+                width: min(420px, 78vw);
+            }
+
             .top-fairy-link {
                 width: 66px;
                 height: 66px;
@@ -903,6 +962,11 @@
                         height: 38px;
                     }
 
+                    .about-morph-icon img {
+                        width: 38px;
+                        height: 38px;
+                    }
+
                 .nav-link img,
                 .morph-nav-icon .butterfly-frame,
                 .morph-nav-icon .mushroom-frame,
@@ -963,13 +1027,10 @@
 <body>
 
     <aside class="sidebar">
-        <a class="sidebar-top-logo" href="#" data-page-modal="aboutModal" aria-label="About Elayna Studio">
-            <img src="img/butterfly_top.png" alt="Elayna Studio butterfly top logo">
-        </a>
-
         <nav class="nav-icons">
-            <a class="nav-link large-fairy" href="#" data-page-modal="aboutModal" data-nav-group="about">
-                <img class="fairy-fade" src="svg/fairy.svg" alt="About">
+            <a class="nav-link large-fairy about-morph-icon" href="#" data-page-modal="aboutModal" data-nav-group="about" aria-label="About Elayna Studio">
+                <img class="about-butterfly-frame" src="img/butterfly_top.png" alt="">
+                <img class="about-fairy-frame" src="svg/fairy.svg" alt="About">
                 <span class="icon-label">About</span>
             </a>
 
@@ -994,33 +1055,7 @@
 
     <header class="topbar">
         <div class="brand">
-            <div class="brand-icon morph-logo">
-                <img class="logo-frame teal-frame" src="img/E_teal.png" alt="Artwork by Elayna logo teal">
-                <img class="logo-frame purple-frame" src="img/E_purple.png" alt="Artwork by Elayna logo purple">
-                <img class="logo-frame top-frame" src="img/E_top.png" alt="Artwork by Elayna logo top">
-            </div>
-
-            <div class="brand-text">
-                <div class="brand-title">Elayna.Studio</div>
-                <div class="brand-subtitle">Original Artwork Inspired By Nature, Light, and Imagination</div>
-            </div>
-        </div>
-
-        <div class="top-actions">
-            <div class="menu-wrap-top">
-                <button class="icon-btn" id="menuToggle" aria-label="Open site menu" aria-expanded="false">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                        <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-linecap="round" />
-                    </svg>
-                </button>
-
-                <div class="menu-dropdown" id="menuDropdown">
-                    <button class="menu-dropdown-link" data-page-modal="aboutModal">About</button>
-                    <button class="menu-dropdown-link" data-page-modal="storeModal">Store</button>
-                    <button class="menu-dropdown-link" data-page-modal="supportModal">Support</button>
-                    <button class="menu-dropdown-link" data-page-modal="contactModal">Contact</button>
-                </div>
-            </div>
+            <img class="brand-header-image" src="img/elaynaheader.png" alt="Elayna Studio">
         </div>
     </header>
 
@@ -1332,6 +1367,7 @@
     }
 
     function closeMenuDropdown() {
+      if (!menuDropdown || !menuToggle) return;
       menuDropdown.classList.remove("open");
       menuToggle.setAttribute("aria-expanded", "false");
     }
@@ -1386,11 +1422,13 @@
       }
     }
 
-    menuToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      const open = menuDropdown.classList.toggle("open");
-      menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
-    });
+    if (menuToggle && menuDropdown) {
+      menuToggle.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const open = menuDropdown.classList.toggle("open");
+        menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
 
     pageModalLinks.forEach(link => {
       link.addEventListener("click", (e) => {
