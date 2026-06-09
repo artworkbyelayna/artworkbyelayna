@@ -1022,40 +1022,249 @@
                 max-width: 190px;
             }
         }
+
+
+        /* Booking.com-inspired top navigation layout */
+        :root {
+            --sidebar-width: 0px;
+            --header-height: auto;
+            --menu-blue: #0b4598;
+        }
+
+        .booking-style-topbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            height: auto;
+            margin-left: 0;
+            padding: 0;
+            background: var(--menu-blue);
+            border-bottom: none;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.13);
+            justify-content: flex-start;
+        }
+
+        .topbar-inner {
+            width: 100%;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 10px 18px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .booking-style-topbar .brand {
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-decoration: none;
+        }
+
+        .booking-style-topbar .brand-header-image {
+            width: min(360px, 82vw);
+            max-height: 50px;
+            object-fit: contain;
+            object-position: left center;
+            filter: drop-shadow(0 2px 7px rgba(0,0,0,0.18));
+        }
+
+        .site-nav {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .site-nav .nav-link {
+            width: auto;
+            height: 44px;
+            min-width: 0;
+            padding: 0 16px;
+            border-radius: 999px;
+            display: inline-flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            gap: 9px;
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.72);
+            background: transparent;
+            overflow: visible;
+            box-shadow: none;
+        }
+
+        .site-nav .nav-link:hover,
+        .site-nav .nav-link:focus-visible,
+        .site-nav .nav-link.active {
+            background: rgba(255,255,255,0.14);
+            border-color: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 14px rgba(0,0,0,0.16);
+            outline: none;
+        }
+
+        .site-nav .nav-link::before,
+        .site-nav .icon-label {
+            display: none;
+        }
+
+        .site-nav .nav-icon-wrap {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            flex: 0 0 24px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .site-nav .nav-link img,
+        .site-nav .morph-nav-icon .butterfly-frame,
+        .site-nav .morph-nav-icon .mushroom-frame,
+        .site-nav .morph-nav-icon .shop-frame,
+        .site-nav .about-morph-icon .about-butterfly-frame,
+        .site-nav .about-morph-icon .about-fairy-frame {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 24px;
+            height: 24px;
+            transform: translate(-50%, -50%);
+            object-fit: contain;
+            z-index: 1;
+            filter: brightness(0) invert(1) drop-shadow(0 1px 2px rgba(0,0,0,0.25));
+        }
+
+        .site-nav .nav-link:not(.morph-nav-icon):not(.about-morph-icon) img {
+            position: static;
+            transform: none;
+        }
+
+        .site-nav .nav-label {
+            color: #fff;
+            font-size: 0.95rem;
+            line-height: 1;
+            white-space: nowrap;
+        }
+
+        .site-nav .about-morph-icon .about-butterfly-frame,
+        .site-nav .about-morph-icon .about-fairy-frame {
+            opacity: 0;
+            animation: aboutIconFade 6s ease-in-out infinite;
+        }
+
+        .site-nav .about-morph-icon .about-butterfly-frame {
+            animation-delay: 0s;
+        }
+
+        .site-nav .about-morph-icon .about-fairy-frame {
+            animation-delay: 3s;
+        }
+
+        @keyframes aboutIconFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            12% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            40% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            50% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
+        }
+
+        .main {
+            margin-left: 0;
+            padding: 18px 18px 40px;
+        }
+
+        @media (max-width: 760px) {
+            .topbar-inner {
+                padding: 9px 12px 10px;
+                gap: 10px;
+            }
+
+            .booking-style-topbar .brand-header-image {
+                width: min(300px, 86vw);
+                max-height: 44px;
+            }
+
+            .site-nav {
+                gap: 8px;
+            }
+
+            .site-nav .nav-link {
+                height: 40px;
+                padding: 0 12px;
+                gap: 7px;
+            }
+
+            .site-nav .nav-label {
+                font-size: 0.88rem;
+            }
+
+            .site-nav .nav-icon-wrap,
+            .site-nav .nav-link img,
+            .site-nav .morph-nav-icon .butterfly-frame,
+            .site-nav .morph-nav-icon .mushroom-frame,
+            .site-nav .morph-nav-icon .shop-frame,
+            .site-nav .about-morph-icon .about-butterfly-frame,
+            .site-nav .about-morph-icon .about-fairy-frame {
+                width: 22px;
+                height: 22px;
+            }
+
+            .main {
+                margin-left: 0;
+                padding: 14px 10px 28px;
+            }
+        }
+
+        @media (max-width: 520px) {
+            .site-nav .nav-link {
+                flex: 1 1 calc(50% - 8px);
+            }
+        }
+
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <nav class="nav-icons">
-            <a class="nav-link large-fairy about-morph-icon" href="#" data-page-modal="aboutModal" data-nav-group="about" aria-label="About Elayna Studio">
-                <img class="about-butterfly-frame" src="img/butterfly_top.png" alt="">
-                <img class="about-fairy-frame" src="svg/fairy.svg" alt="About">
-                <span class="icon-label">About</span>
+    <header class="topbar booking-style-topbar">
+        <div class="topbar-inner">
+            <a class="brand" href="#" data-page-modal="aboutModal" aria-label="About Elayna Studio">
+                <img class="brand-header-image" src="img/elaynaheader.png" alt="Elayna Studio">
             </a>
 
-            <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
-                <img class="butterfly-frame" src="svg/butterfly.svg" alt="Store butterfly">
-                <img class="mushroom-frame" src="svg/mushroom.svg" alt="Store mushroom">
-                <img class="shop-frame" src="svg/shop.svg" alt="Store shop">
-                <span class="icon-label">Store</span>
-            </a>
+            <nav class="site-nav" aria-label="Site menu">
+                <a class="nav-link large-fairy about-morph-icon" href="#" data-page-modal="aboutModal" data-nav-group="about" aria-label="About">
+                    <span class="nav-icon-wrap">
+                        <img class="about-butterfly-frame" src="img/butterfly_top.png" alt="">
+                        <img class="about-fairy-frame" src="svg/fairy.svg" alt="">
+                    </span>
+                    <span class="nav-label">About</span>
+                </a>
 
-            <a class="nav-link" href="#" data-page-modal="supportModal" data-nav-group="support">
-                <img src="svg/thankyou.svg" alt="Support">
-                <span class="icon-label">Support</span>
-            </a>
+                <a class="nav-link morph-nav-icon" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
+                    <span class="nav-icon-wrap">
+                        <img class="butterfly-frame" src="svg/butterfly.svg" alt="">
+                        <img class="mushroom-frame" src="svg/mushroom.svg" alt="">
+                        <img class="shop-frame" src="svg/shop.svg" alt="">
+                    </span>
+                    <span class="nav-label">Store</span>
+                </a>
 
-            <a class="nav-link" href="#" data-page-modal="contactModal" data-nav-group="contact">
-                <img src="svg/letter.svg" alt="Contact">
-                <span class="icon-label">Contact</span>
-            </a>
-        </nav>
-    </aside>
+                <a class="nav-link" href="#" data-page-modal="supportModal" data-nav-group="support" aria-label="Support">
+                    <span class="nav-icon-wrap"><img src="svg/thankyou.svg" alt=""></span>
+                    <span class="nav-label">Support</span>
+                </a>
 
-    <header class="topbar">
-        <div class="brand">
-            <img class="brand-header-image" src="img/elaynaheader.png" alt="Elayna Studio">
+                <a class="nav-link" href="#" data-page-modal="contactModal" data-nav-group="contact" aria-label="Contact">
+                    <span class="nav-icon-wrap"><img src="svg/letter.svg" alt=""></span>
+                    <span class="nav-label">Contact</span>
+                </a>
+            </nav>
         </div>
     </header>
 
@@ -1142,7 +1351,7 @@
     const pageModals = document.querySelectorAll(".page-modal");
     const pageModalLinks = document.querySelectorAll("[data-page-modal]");
     const pageModalCloseButtons = document.querySelectorAll("[data-close-page-modal]");
-    const sideNavLinks = document.querySelectorAll(".sidebar .nav-link");
+    const sideNavLinks = document.querySelectorAll(".site-nav .nav-link");
 
     const BATCH_SIZE = 12;
 
@@ -1379,7 +1588,7 @@
     function setActiveNav(groupName) {
       clearActiveNav();
       if (!groupName) return;
-      const match = document.querySelector(`.sidebar .nav-link[data-nav-group="${groupName}"]`);
+      const match = document.querySelector(`.site-nav .nav-link[data-nav-group="${groupName}"]`);
       if (match) match.classList.add("active");
     }
 
