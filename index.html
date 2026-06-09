@@ -1024,7 +1024,7 @@
         }
 
 
-        /* Booking.com-inspired top navigation layout */
+        /* Single-line logo + modal navigation */
         :root {
             --sidebar-width: 0px;
             --header-height: auto;
@@ -1048,27 +1048,60 @@
             width: 100%;
             max-width: 1600px;
             margin: 0 auto;
-            padding: 18px 18px 14px;
+            padding: 12px 18px;
             display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 12px;
-        }
-
-        .booking-style-topbar .brand {
-            width: auto;
-            display: inline-flex;
+            flex-direction: row;
             align-items: center;
             justify-content: flex-start;
-            text-decoration: none;
+            gap: 14px;
         }
 
-        .booking-style-topbar .brand-header-image {
-            width: min(700px, 92vw);
-            max-height: 120px;
+        .menu-logo-morph {
+            position: relative;
+            width: 64px;
+            height: 64px;
+            flex: 0 0 64px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 18px;
+            background: rgba(255,255,255,0.55);
+            border: 4px solid var(--teal-border);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            text-decoration: none;
+            transition: transform 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        .menu-logo-morph:hover,
+        .menu-logo-morph:focus-visible {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover), 0 0 10px var(--teal-glow), 0 0 14px var(--purple-glow);
+            outline: none;
+        }
+
+        .menu-logo-morph img {
+            position: absolute;
+            inset: 8px;
+            width: calc(100% - 16px);
+            height: calc(100% - 16px);
             object-fit: contain;
-            object-position: left center;
-            filter: drop-shadow(0 2px 7px rgba(0,0,0,0.12));
+            opacity: 0;
+            transform: scale(0.92);
+            animation: eLogoMorph 9s infinite ease-in-out;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.12));
+        }
+
+        .menu-logo-morph .e-top-frame { animation-delay: 0s; }
+        .menu-logo-morph .e-teal-frame { animation-delay: 3s; }
+        .menu-logo-morph .e-purple-frame { animation-delay: 6s; }
+
+        @keyframes eLogoMorph {
+            0% { opacity: 0; transform: scale(0.9); }
+            8% { opacity: 1; transform: scale(1); }
+            25% { opacity: 1; transform: scale(1); }
+            33.333% { opacity: 0; transform: scale(1.08); }
+            100% { opacity: 0; transform: scale(1.08); }
         }
 
         .site-nav {
@@ -1077,34 +1110,41 @@
             justify-content: flex-start;
             flex-wrap: wrap;
             gap: 10px;
-            width: 100%;
+            width: auto;
         }
 
         .site-nav .nav-link {
             width: auto;
-            height: 44px;
+            height: 56px;
             min-width: 0;
             padding: 0 16px;
-            border-radius: 999px;
+            border-radius: 18px;
             display: inline-flex;
             flex-direction: row;
             align-items: center;
             justify-content: center;
             gap: 9px;
             color: #222;
-            border: 1px solid rgba(0,0,0,0.14);
+            border: 4px solid var(--purple-border);
             background: rgba(255,255,255,0.55);
             overflow: visible;
-            box-shadow: none;
+            box-shadow: var(--shadow);
+        }
+
+        .site-nav .nav-link:nth-child(odd) {
+            border-color: var(--teal-border);
+        }
+
+        .site-nav .nav-link:nth-child(even) {
+            border-color: var(--purple-border);
         }
 
         .site-nav .nav-link:hover,
         .site-nav .nav-link:focus-visible,
         .site-nav .nav-link.active {
             background: rgba(255,255,255,0.92);
-            border-color: rgba(42, 211, 201, 0.45);
-            transform: translateY(-1px);
-            box-shadow: 0 6px 14px rgba(0,0,0,0.16);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover), 0 0 10px var(--teal-glow), 0 0 14px var(--purple-glow);
             outline: none;
         }
 
@@ -1115,9 +1155,9 @@
 
         .site-nav .nav-icon-wrap {
             position: relative;
-            width: 24px;
-            height: 24px;
-            flex: 0 0 24px;
+            width: 26px;
+            height: 26px;
+            flex: 0 0 26px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
@@ -1132,8 +1172,8 @@
             position: absolute;
             top: 50%;
             left: 50%;
-            width: 24px;
-            height: 24px;
+            width: 26px;
+            height: 26px;
             transform: translate(-50%, -50%);
             object-fit: contain;
             z-index: 1;
@@ -1158,13 +1198,8 @@
             animation: aboutIconFade 6s ease-in-out infinite;
         }
 
-        .site-nav .about-morph-icon .about-butterfly-frame {
-            animation-delay: 0s;
-        }
-
-        .site-nav .about-morph-icon .about-fairy-frame {
-            animation-delay: 3s;
-        }
+        .site-nav .about-morph-icon .about-butterfly-frame { animation-delay: 0s; }
+        .site-nav .about-morph-icon .about-fairy-frame { animation-delay: 3s; }
 
         @keyframes aboutIconFade {
             0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
@@ -1181,13 +1216,15 @@
 
         @media (max-width: 760px) {
             .topbar-inner {
-                padding: 9px 12px 10px;
-                gap: 10px;
+                padding: 10px 12px;
+                gap: 9px;
             }
 
-            .booking-style-topbar .brand-header-image {
-                width: min(520px, 90vw);
-                max-height: 86px;
+            .menu-logo-morph {
+                width: 54px;
+                height: 54px;
+                flex-basis: 54px;
+                border-radius: 16px;
             }
 
             .site-nav {
@@ -1195,9 +1232,10 @@
             }
 
             .site-nav .nav-link {
-                height: 40px;
-                padding: 0 12px;
+                height: 48px;
+                padding: 0 11px;
                 gap: 7px;
+                border-radius: 16px;
             }
 
             .site-nav .nav-label {
@@ -1222,6 +1260,14 @@
         }
 
         @media (max-width: 520px) {
+            .topbar-inner {
+                align-items: flex-start;
+            }
+
+            .site-nav {
+                flex: 1 1 auto;
+            }
+
             .site-nav .nav-link {
                 flex: 1 1 calc(50% - 8px);
             }
@@ -1233,8 +1279,10 @@
 
     <header class="topbar booking-style-topbar">
         <div class="topbar-inner">
-            <a class="brand" href="#" data-page-modal="aboutModal" aria-label="About Elayna Studio">
-                <img class="brand-header-image" src="img/elaynaheader.png" alt="Elayna Studio">
+            <a class="menu-logo-morph" href="#" data-page-modal="aboutModal" aria-label="About Elayna Studio">
+                <img class="e-top-frame" src="img/E_top.png" alt="">
+                <img class="e-teal-frame" src="img/E_teal.png" alt="">
+                <img class="e-purple-frame" src="img/E_purple.png" alt="">
             </a>
 
             <nav class="site-nav" aria-label="Site menu">
