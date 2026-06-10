@@ -1210,6 +1210,186 @@
             100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
         }
 
+
+
+        .store-carousel-section {
+            display: none;
+            max-width: 1600px;
+            margin: 0 auto 18px;
+        }
+
+        .store-carousel-section.open {
+            display: block;
+        }
+
+        .store-carousel-shell {
+            border: 4px solid var(--teal-border);
+            border-radius: var(--radius);
+            background: #fff;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            transition: box-shadow 0.24s ease, transform 0.24s ease;
+        }
+
+        .store-carousel-shell:hover {
+            box-shadow: var(--shadow-hover), 0 0 10px var(--teal-glow), 0 0 14px var(--purple-glow);
+        }
+
+        .store-carousel-top {
+            display: grid;
+            grid-template-columns: 54px minmax(0, 1fr) 54px;
+            align-items: stretch;
+            min-height: 280px;
+            background: linear-gradient(135deg, #ffffff, #f7f7f7);
+        }
+
+        .store-carousel-button {
+            border: none;
+            background: rgba(255,255,255,0.72);
+            color: #222;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+
+        .store-carousel-button:hover,
+        .store-carousel-button:focus-visible {
+            background: rgba(42, 211, 201, 0.14);
+            outline: none;
+        }
+
+        .store-carousel-main {
+            display: grid;
+            grid-template-columns: minmax(210px, 38%) minmax(0, 1fr);
+            gap: 0;
+            align-items: stretch;
+            cursor: pointer;
+        }
+
+        .store-carousel-image-wrap {
+            background: #e9e9e9;
+            min-height: 280px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .store-carousel-image-wrap img {
+            width: 100%;
+            height: 100%;
+            max-height: 420px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .store-carousel-info {
+            padding: 24px 24px 22px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            text-align: left;
+        }
+
+        .store-carousel-kicker {
+            width: fit-content;
+            font-size: 0.72rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #555;
+            background: rgba(42,211,201,0.14);
+            border: 1px solid rgba(181,124,255,0.25);
+            border-radius: 999px;
+            padding: 6px 10px;
+        }
+
+        .store-carousel-title {
+            font-size: clamp(1.25rem, 3vw, 2rem);
+            line-height: 1.1;
+            font-weight: 700;
+            color: #1f1f1f;
+        }
+
+        .store-carousel-price {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .store-carousel-description {
+            color: #444;
+            line-height: 1.5;
+            max-width: 56ch;
+        }
+
+        .store-carousel-hint {
+            font-size: 0.82rem;
+            color: #777;
+            margin-top: 4px;
+        }
+
+        .store-carousel-categories {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 14px 14px;
+            border-top: 1px solid rgba(0,0,0,0.08);
+            background: #fff;
+        }
+
+        .store-category-button {
+            border: 1px solid rgba(0,0,0,0.12);
+            background: rgba(255,255,255,0.9);
+            color: #222;
+            border-radius: 999px;
+            padding: 8px 12px;
+            font: inherit;
+            font-size: 0.86rem;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .store-category-button:hover,
+        .store-category-button:focus-visible,
+        .store-category-button.active {
+            background: rgba(255,255,255,0.98);
+            border-color: rgba(181, 124, 255, 0.5);
+            transform: translateY(-1px);
+            box-shadow: 0 0 10px var(--teal-glow), 0 0 14px var(--purple-glow);
+            outline: none;
+        }
+
+
+        .store-hide-wrap {
+            display: flex;
+            justify-content: center;
+            padding: 0 14px 16px;
+            background: #fff;
+        }
+
+        .store-hide-button {
+            border: 4px solid var(--purple-border);
+            background: rgba(255,255,255,0.96);
+            color: #222;
+            border-radius: 999px;
+            padding: 10px 18px;
+            font: inherit;
+            font-size: 0.9rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+        }
+
+        .store-hide-button:hover,
+        .store-hide-button:focus-visible {
+            transform: translateY(-1px);
+            border-color: var(--teal-border);
+            box-shadow: var(--shadow-hover), 0 0 10px var(--teal-glow), 0 0 14px var(--purple-glow);
+            outline: none;
+        }
+
         .main {
             margin-left: 0;
             padding: 18px 18px 40px;
@@ -1257,6 +1437,24 @@
                 margin-left: 0;
                 padding: 14px 10px 28px;
             }
+
+            .store-carousel-top {
+                grid-template-columns: 44px minmax(0, 1fr) 44px;
+                min-height: 0;
+            }
+
+            .store-carousel-main {
+                grid-template-columns: 1fr;
+            }
+
+            .store-carousel-image-wrap {
+                min-height: 220px;
+            }
+
+            .store-carousel-info {
+                padding: 18px 18px 20px;
+            }
+
         }
 
         @media (max-width: 520px) {
@@ -1279,7 +1477,7 @@
 
     <header class="topbar booking-style-topbar">
         <div class="topbar-inner">
-            <a class="menu-logo-morph" href="#" data-page-modal="aboutModal" aria-label="About Elayna Studio">
+            <a class="menu-logo-morph" href="#" id="homeLogoToggle" aria-label="Elayna Studio home">
                 <img class="e-top-frame" src="img/E_top.png" alt="">
                 <img class="e-teal-frame" src="img/E_teal.png" alt="">
                 <img class="e-purple-frame" src="img/E_purple.png" alt="">
@@ -1291,8 +1489,8 @@
                     <span class="nav-label">About</span>
                 </a>
 
-                <a class="nav-link" href="#" data-page-modal="storeModal" data-nav-group="store" aria-label="Store">
-                    <span class="nav-icon-wrap"><img src="svg/shop.svg" alt=""></span>
+                <a class="nav-link" href="#" id="storeCarouselToggle" data-nav-group="store" aria-label="Store">
+                    <span class="nav-icon-wrap"><img src="svg/store.svg" alt=""></span>
                     <span class="nav-label">Store</span>
                 </a>
 
@@ -1310,6 +1508,31 @@
     </header>
 
     <main class="main">
+
+        <section class="store-carousel-section" id="storeCarouselSection" aria-hidden="true">
+            <div class="store-carousel-shell">
+                <div class="store-carousel-top">
+                    <button class="store-carousel-button" id="storeCarouselPrev" type="button" aria-label="Previous store item">‹</button>
+                    <article class="store-carousel-main" id="storeCarouselMain" tabindex="0" aria-label="Open featured store item">
+                        <div class="store-carousel-image-wrap">
+                            <img id="storeCarouselImg" src="" alt="">
+                        </div>
+                        <div class="store-carousel-info">
+                            <div class="store-carousel-kicker" id="storeCarouselCategory">Store</div>
+                            <div class="store-carousel-title" id="storeCarouselTitle">Featured pieces</div>
+                            <div class="store-carousel-price" id="storeCarouselPrice"></div>
+                            <div class="store-carousel-description" id="storeCarouselDescription">Add items to store.text to show jewelry, paintings, suncatchers, wind chimes, and other featured pieces here.</div>
+                            <div class="store-carousel-hint">Click the image or text area for details.</div>
+                        </div>
+                    </article>
+                    <button class="store-carousel-button" id="storeCarouselNext" type="button" aria-label="Next store item">›</button>
+                </div>
+                <div class="store-carousel-categories" id="storeCarouselCategories"></div>
+                <div class="store-hide-wrap">
+                    <button class="store-hide-button" id="storeCarouselHide" type="button">Hide Store</button>
+                </div>
+            </div>
+        </section>
         <section class="masonry" id="gallery"></section>
         <div class="load-indicator" id="loadIndicator">Loading image list…</div>
     </main>
@@ -1393,6 +1616,21 @@
     const pageModalLinks = document.querySelectorAll("[data-page-modal]");
     const pageModalCloseButtons = document.querySelectorAll("[data-close-page-modal]");
     const sideNavLinks = document.querySelectorAll(".site-nav .nav-link");
+    const homeLogoToggle = document.getElementById("homeLogoToggle");
+    const storeCarouselToggle = document.getElementById("storeCarouselToggle");
+    const storeCarouselSection = document.getElementById("storeCarouselSection");
+    const storeCarouselPrev = document.getElementById("storeCarouselPrev");
+    const storeCarouselNext = document.getElementById("storeCarouselNext");
+    const storeCarouselMain = document.getElementById("storeCarouselMain");
+    const storeCarouselImg = document.getElementById("storeCarouselImg");
+    const storeCarouselCategory = document.getElementById("storeCarouselCategory");
+    const storeCarouselTitle = document.getElementById("storeCarouselTitle");
+    const storeCarouselPrice = document.getElementById("storeCarouselPrice");
+    const storeCarouselDescription = document.getElementById("storeCarouselDescription");
+    const storeCarouselCategories = document.getElementById("storeCarouselCategories");
+    const storeCarouselHide = document.getElementById("storeCarouselHide");
+
+    const STORE_FEATURED_PATH = "store.text";
 
     const BATCH_SIZE = 12;
 
@@ -1401,6 +1639,11 @@
     let filteredItems = [];
     let renderedCount = 0;
     let isLoading = false;
+    let storeItems = [];
+    let filteredStoreItems = [];
+    let storeCurrentIndex = 0;
+    let storeActiveCategory = "All";
+    let storeLoaded = false;
 
     function prettyName(filename) {
       return String(filename || "")
@@ -1608,6 +1851,131 @@
           : "Scroll for more items…";
     }
 
+
+
+    function parseStoreList(text) {
+      return text
+        .split(/\r?\n/)
+        .map(line => line.trim())
+        .filter(line => line && !line.startsWith("#"))
+        .map(line => {
+          const parts = line.split("|").map(part => part.trim());
+          return {
+            filename: parts[0] || "",
+            title: parts[1] || prettyName(parts[0] || ""),
+            category: parts[2] || "Featured",
+            price: parts[3] || "",
+            description: parts[4] || ""
+          };
+        })
+        .filter(item => item.filename);
+    }
+
+    async function loadStoreCarousel() {
+      if (storeLoaded) return;
+      storeLoaded = true;
+
+      try {
+        const response = await fetch(STORE_FEATURED_PATH, { cache: "no-store" });
+        if (!response.ok) throw new Error(`Could not load ${STORE_FEATURED_PATH}`);
+        const text = await response.text();
+        storeItems = parseStoreList(text);
+      } catch (error) {
+        console.warn(error);
+        storeItems = [];
+      }
+
+      if (!storeItems.length) {
+        storeCarouselCategories.innerHTML = "";
+        storeCarouselCategory.textContent = "Store";
+        storeCarouselTitle.textContent = "Featured pieces";
+        storeCarouselPrice.textContent = "";
+        storeCarouselDescription.textContent = "Create store.text with lines like: item.jpg|Fairy Wing Earrings|Jewelry|$12|Short description";
+        storeCarouselImg.removeAttribute("src");
+        storeCarouselImg.alt = "";
+        return;
+      }
+
+      renderStoreCategories();
+      applyStoreCategory("All");
+    }
+
+    function renderStoreCategories() {
+      const categories = ["All", ...new Set(storeItems.map(item => item.category).filter(Boolean))];
+      storeCarouselCategories.innerHTML = "";
+
+      categories.forEach(category => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "store-category-button";
+        button.textContent = category;
+        button.addEventListener("click", () => applyStoreCategory(category));
+        storeCarouselCategories.appendChild(button);
+      });
+    }
+
+    function applyStoreCategory(category) {
+      storeActiveCategory = category;
+      filteredStoreItems = category === "All"
+        ? [...storeItems]
+        : storeItems.filter(item => item.category === category);
+      storeCurrentIndex = 0;
+
+      storeCarouselCategories.querySelectorAll(".store-category-button").forEach(button => {
+        button.classList.toggle("active", button.textContent === category);
+      });
+
+      renderStoreCarouselItem();
+    }
+
+    function renderStoreCarouselItem() {
+      if (!filteredStoreItems.length) return;
+      const item = filteredStoreItems[storeCurrentIndex];
+      storeCarouselImg.src = `img/${item.filename}`;
+      storeCarouselImg.alt = item.title || item.description || "Featured store item";
+      storeCarouselCategory.textContent = item.category || "Featured";
+      storeCarouselTitle.textContent = item.title || prettyName(item.filename);
+      storeCarouselPrice.textContent = item.price || "";
+      storeCarouselDescription.textContent = item.description || "Click for details.";
+    }
+
+    function moveStoreCarousel(direction) {
+      if (!filteredStoreItems.length) return;
+      storeCurrentIndex = (storeCurrentIndex + direction + filteredStoreItems.length) % filteredStoreItems.length;
+      renderStoreCarouselItem();
+    }
+
+    function openStoreCarouselItem() {
+      if (!filteredStoreItems.length) return;
+      const item = filteredStoreItems[storeCurrentIndex];
+      modalImg.src = `img/${item.filename}`;
+      modalImg.alt = item.title || item.description || "Featured store item";
+      modalTitle.innerHTML = `
+        <strong>${item.title || prettyName(item.filename)}</strong>
+        ${item.price ? `<br>${item.price}` : ""}
+        ${item.category ? `<br><span>${item.category}</span>` : ""}
+        ${item.description ? `<br><br>${item.description}</span>` : ""}
+      `;
+      modalOpenFile.href = `img/${item.filename}`;
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+    }
+
+    async function showStoreCarousel() {
+      if (!storeCarouselSection) return;
+      await loadStoreCarousel();
+      storeCarouselSection.classList.add("open");
+      storeCarouselSection.setAttribute("aria-hidden", "false");
+      setActiveNav("store");
+      storeCarouselSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function hideStoreCarousel() {
+      if (!storeCarouselSection) return;
+      storeCarouselSection.classList.remove("open");
+      storeCarouselSection.setAttribute("aria-hidden", "true");
+    }
+
     function handleScrollLoad() {
       const scrollBottom = window.innerHeight + window.scrollY;
       const threshold = document.body.offsetHeight - 900;
@@ -1638,6 +2006,7 @@
       if (!modalEl) return;
 
       closePageModals();
+      if (id !== "storeModal") hideStoreCarousel();
       modalEl.classList.add("open");
       modalEl.setAttribute("aria-hidden", "false");
 
@@ -1677,6 +2046,50 @@
         e.stopPropagation();
         const open = menuDropdown.classList.toggle("open");
         menuToggle.setAttribute("aria-expanded", open ? "true" : "false");
+      });
+    }
+
+
+
+    if (homeLogoToggle) {
+      homeLogoToggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideStoreCarousel();
+        clearActiveNav();
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      });
+    }
+
+    if (storeCarouselToggle) {
+      storeCarouselToggle.addEventListener("click", (e) => {
+        e.preventDefault();
+        showStoreCarousel();
+      });
+    }
+
+    if (storeCarouselPrev) {
+      storeCarouselPrev.addEventListener("click", () => moveStoreCarousel(-1));
+    }
+
+    if (storeCarouselNext) {
+      storeCarouselNext.addEventListener("click", () => moveStoreCarousel(1));
+    }
+
+    if (storeCarouselHide) {
+      storeCarouselHide.addEventListener("click", (e) => {
+        e.preventDefault();
+        hideStoreCarousel();
+        clearActiveNav();
+      });
+    }
+
+    if (storeCarouselMain) {
+      storeCarouselMain.addEventListener("click", openStoreCarouselItem);
+      storeCarouselMain.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openStoreCarouselItem();
+        }
       });
     }
 
@@ -1744,6 +2157,16 @@
     document.addEventListener("click", (e) => {
       if (!e.target.closest(".menu-wrap-top")) {
         closeMenuDropdown();
+      }
+
+      if (storeCarouselSection && storeCarouselSection.classList.contains("open")) {
+        const clickedInsideCarousel = e.target.closest("#storeCarouselSection");
+        const clickedStoreButton = e.target.closest("#storeCarouselToggle");
+        const clickedImageModal = e.target.closest("#imageModal");
+        if (!clickedInsideCarousel && !clickedStoreButton && !clickedImageModal) {
+          hideStoreCarousel();
+          clearActiveNav();
+        }
       }
     });
 
